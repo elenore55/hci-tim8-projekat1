@@ -29,6 +29,7 @@ namespace HCI_MiniProjekat
             LoadCurrencies();
             InitializeComponent();
             element.Visibility = Visibility.Collapsed;
+            TimeInterval.Visibility = Visibility.Collapsed;
             tb.ItemsSource = Currencies;
             tb2.ItemsSource = Currencies;
         }
@@ -121,14 +122,31 @@ namespace HCI_MiniProjekat
             ToCurrency = "";
             element.Visibility = Visibility.Collapsed;
         }
-
+        private void Intertval_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (Intertval.SelectedIndex == 0)
+            {
+                TimeInterval.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                TimeInterval.Visibility = Visibility.Collapsed;
+            }
+        }
         private void Fetch_Click(object sender, RoutedEventArgs e)
         {
-            if (FromCurrecies.Count == 0 || ToCurrency == "" || FromDate.SelectedDate == null || ToDate == null || Type.SelectedItem == null)
+            if (FromCurrecies.Count == 0 || ToCurrency == "" || FromDate.SelectedDate == null || ToDate == null || Type.SelectedItem == null || Intertval.SelectedItem == null)
             {
                 MessageBox.Show("Niste Izabarali sve opcije!");
             }
-            MessageBox.Show("Izabarali ste sve opcije!");
+            else
+            {
+                if (FromDate.SelectedDate.GetValueOrDefault().CompareTo(ToDate.SelectedDate.GetValueOrDefault()) > 0)
+                {
+                    MessageBox.Show("Datumi moraju biti izabrani hronoloski!");
+                }
+                MessageBox.Show("Izabarali ste sve opcije!");
+            }
         }
     }
 }

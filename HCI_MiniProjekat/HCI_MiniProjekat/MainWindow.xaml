@@ -100,8 +100,12 @@
                         IsDeletable="True"
                         ToolTip="{Binding ToCurrency}" Background="LightCyan" HorizontalAlignment="Center" VerticalAlignment="Center" DeleteClick="element_DeleteClick" materialDesign:ShadowAssist.ShadowDepth="Depth3">
             </materialDesign:Chip>
-            <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+            <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
@@ -115,20 +119,46 @@
                   materialDesign:HintAssist.Hint="Pick Date 'To'"
                   materialDesign:TextFieldAssist.HasClearButton="True"
                   Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
+                <ComboBox x:Name="Type" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"
+                    materialDesign:HintAssist.Hint="Data Type"
+                    materialDesign:TextFieldAssist.HasClearButton="True">
+                        <ComboBoxItem
+                    Content="1. Open" />
+                        <ComboBoxItem
+                    Content="2. Close" />
+                        <ComboBoxItem
+                    Content="3. High" />
+                        <ComboBoxItem
+                    Content="4. Low" />
+                </ComboBox>
+                <ComboBox x:Name="Intertval" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center"
+                    materialDesign:HintAssist.Hint="Interval Type"
+                    materialDesign:TextFieldAssist.HasClearButton="True" SelectionChanged="Intertval_SelectionChanged">
+                    <ComboBoxItem
+                    Content="Intraday" />
+                    <ComboBoxItem
+                    Content="Daily" />
+                    <ComboBoxItem
+                    Content="Weekly" />
+                    <ComboBoxItem
+                    Content="Monthly" />
+                </ComboBox>
+                <ComboBox x:Name="TimeInterval" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center"
+                    materialDesign:HintAssist.Hint="Minutes"
+                    materialDesign:TextFieldAssist.HasClearButton="True">
+                    <ComboBoxItem
+                    Content="1min" />
+                    <ComboBoxItem
+                    Content="5min" />
+                    <ComboBoxItem
+                    Content="15min" />
+                    <ComboBoxItem
+                    Content="30min" />
+                    <ComboBoxItem
+                    Content="60min" />
+                </ComboBox>
+                <Button Grid.Column="5" HorizontalAlignment="Center" materialDesign:ShadowAssist.ShadowDepth="Depth2" Click="Fetch_Click">Fetch</Button>
             </Grid>
-            <ComboBox x:Name="Type" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"
-                materialDesign:HintAssist.Hint="Type"
-                materialDesign:TextFieldAssist.HasClearButton="True">
-                    <ComboBoxItem
-                Content="1. Open" />
-                    <ComboBoxItem
-                Content="2. Close" />
-                    <ComboBoxItem
-                Content="3. High" />
-                    <ComboBoxItem
-                Content="4. Low" />
-            </ComboBox>
-            <Button Grid.Column="3" Grid.Row="2" HorizontalAlignment="Center" materialDesign:ShadowAssist.ShadowDepth="Depth2" Click="Fetch_Click">Fetch</Button>
         </Grid>
     </Grid>
 </Window>
