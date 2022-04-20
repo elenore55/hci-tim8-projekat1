@@ -90,7 +90,7 @@
                         <materialDesign:Chip
                         Content ="{Binding ., Converter={local:SplitConverter}}"
                         IsDeletable="True"
-                        ToolTip="{Binding .}" DeleteClick="Chip_DeleteClick"  Background="DarkCyan" materialDesign:ShadowAssist.ShadowDepth="Depth3">
+                        ToolTip="{Binding .}" DeleteClick="Chip_DeleteClick"  Background="DarkCyan" materialDesign:ShadowAssist.ShadowDepth="Depth3" FontSize="11">
                         </materialDesign:Chip>
                     </DataTemplate>
                 </ListView.ItemTemplate>
@@ -105,18 +105,18 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <DatePicker Grid.Column="0" VerticalAlignment="Top"
+                <DatePicker x:Name="FromDate" Grid.Column="0" VerticalAlignment="Top"
                   Width="140"
                   materialDesign:HintAssist.Hint="Pick Date 'From'"
                   materialDesign:TextFieldAssist.HasClearButton="True"
                   Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
-                <DatePicker Grid.Column="1" VerticalAlignment="Top"
+                <DatePicker x:Name="ToDate" Grid.Column="1" VerticalAlignment="Top"
                   Width="140"
                   materialDesign:HintAssist.Hint="Pick Date 'To'"
                   materialDesign:TextFieldAssist.HasClearButton="True"
                   Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
             </Grid>
-            <ComboBox Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"
+            <ComboBox x:Name="Type" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"
                 materialDesign:HintAssist.Hint="Type"
                 materialDesign:TextFieldAssist.HasClearButton="True">
                     <ComboBoxItem
@@ -128,7 +128,7 @@
                     <ComboBoxItem
                 Content="4. Low" />
             </ComboBox>
-            <Button Grid.Column="3" Grid.Row="2" HorizontalAlignment="Center" materialDesign:ShadowAssist.ShadowDepth="Depth2">Fetch</Button>
+            <Button Grid.Column="3" Grid.Row="2" HorizontalAlignment="Center" materialDesign:ShadowAssist.ShadowDepth="Depth2" Click="Fetch_Click">Fetch</Button>
         </Grid>
     </Grid>
 </Window>
