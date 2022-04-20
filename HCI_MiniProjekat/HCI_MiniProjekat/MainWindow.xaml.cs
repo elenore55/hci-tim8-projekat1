@@ -20,9 +20,12 @@ namespace HCI_MiniProjekat
     /// </summary>
     public partial class MainWindow : Window
     {
+        public List<string> FromCurrecies { get; set; }
+        public string ToCurrency { get; set; } = "";
         public MainWindow()
         {
             InitializeComponent();
+            element.Visibility = Visibility.Collapsed;
         }
 
         private void tb_KeyDown(object sender, KeyEventArgs e)
@@ -31,6 +34,16 @@ namespace HCI_MiniProjekat
         }
 
         private void tb2_KeyDown(object sender, KeyEventArgs e)
+        {
+
+        }
+
+        private void Chip_DeleteClick(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void element_DeleteClick(object sender, RoutedEventArgs e)
         {
 
         }

@@ -78,6 +78,57 @@
                     <content:AutoCompleteBox Grid.Column="1" VerticalAlignment="Center" x:Name="tb2" FilterMode="Contains" Background="{Binding Path=Background, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" Style="{StaticResource AutoCompleteBoxStyle}" KeyDown="tb2_KeyDown" BorderThickness="0" Placeholder="Search currency.."/>
                 </Grid>
             </materialDesign:ColorZone>
+            <ListView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="First_List" ItemsSource="{Binding FromCurrecies}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal">
+                        </WrapPanel>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+                <ListView.ItemTemplate>
+                    <DataTemplate >
+                        <materialDesign:Chip
+                        Content ="{Binding ., Converter={local:SplitConverter}}"
+                        IsDeletable="True"
+                        ToolTip="{Binding .}" DeleteClick="Chip_DeleteClick"  Background="DarkCyan" materialDesign:ShadowAssist.ShadowDepth="Depth3">
+                        </materialDesign:Chip>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <materialDesign:Chip x:Name="element" Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2"
+                        Content ="{Binding ToCurrency, Converter={local:SplitConverter}}"
+                        IsDeletable="True"
+                        ToolTip="{Binding ToCurrency}" Background="LightCyan" HorizontalAlignment="Center" VerticalAlignment="Center" DeleteClick="element_DeleteClick" materialDesign:ShadowAssist.ShadowDepth="Depth3">
+            </materialDesign:Chip>
+            <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <DatePicker Grid.Column="0" VerticalAlignment="Top"
+                  Width="140"
+                  materialDesign:HintAssist.Hint="Pick Date 'From'"
+                  materialDesign:TextFieldAssist.HasClearButton="True"
+                  Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
+                <DatePicker Grid.Column="1" VerticalAlignment="Top"
+                  Width="140"
+                  materialDesign:HintAssist.Hint="Pick Date 'To'"
+                  materialDesign:TextFieldAssist.HasClearButton="True"
+                  Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
+            </Grid>
+            <ComboBox Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"
+                materialDesign:HintAssist.Hint="Type"
+                materialDesign:TextFieldAssist.HasClearButton="True">
+                    <ComboBoxItem
+                Content="1. Open" />
+                    <ComboBoxItem
+                Content="2. Close" />
+                    <ComboBoxItem
+                Content="3. High" />
+                    <ComboBoxItem
+                Content="4. Low" />
+            </ComboBox>
+            <Button Grid.Column="3" Grid.Row="2" HorizontalAlignment="Center" materialDesign:ShadowAssist.ShadowDepth="Depth2">Fetch</Button>
         </Grid>
     </Grid>
 </Window>
