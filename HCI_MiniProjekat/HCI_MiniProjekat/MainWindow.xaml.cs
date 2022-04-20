@@ -24,5 +24,15 @@ namespace HCI_MiniProjekat
         {
             InitializeComponent();
         }
+
+        private void tb_KeyDown(object sender, KeyEventArgs e)
+        {
+
+        }
+
+        private void tb2_KeyDown(object sender, KeyEventArgs e)
+        {
+
+        }
     }
 }

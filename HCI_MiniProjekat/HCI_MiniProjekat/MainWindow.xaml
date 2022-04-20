@@ -4,17 +4,80 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HCI_MiniProjekat"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+        xmlns:content="clr-namespace:System.Windows.Controls;assembly=DotNetProjects.Input.Toolkit"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
-        Title="CourseChangeTracker" Height="700" Width="1000">
+        Title="CourseChangeTracker" Height="700" Width="1000" DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    <Window.Resources>
+        <Style x:Key="AutoCompleteBoxStyle" TargetType="{x:Type content:AutoCompleteBox}">
+            <Style.Resources>
+                <Style TargetType="{x:Type ListBox}">
+                    <Setter Property="MaxHeight" Value="200" />
+                </Style>
+            </Style.Resources>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="4*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="5*"/>
         </Grid.RowDefinitions>
-        
+        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="5*"/>
+                <RowDefinition Height="7*"/>
+                <RowDefinition Height="4*"/>
+            </Grid.RowDefinitions>
+            <materialDesign:ColorZone Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4" Grid.RowSpan="3" Background="#51afe5" Padding="2" VerticalAlignment="Stretch"></materialDesign:ColorZone>
+            <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold">Select 'From' currencies</Label>
+            <materialDesign:ColorZone Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" Mode="Standard" Padding="8 4 8 4" CornerRadius="8" Margin="30 14 30 14" materialDesign:ShadowAssist.ShadowDepth="Depth2">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Button Style="{StaticResource MaterialDesignToolButton}" Grid.Column="0" VerticalAlignment="Center">
+                        <materialDesign:PackIcon
+                        Kind="Search"
+                        Opacity=".56" />
+                    </Button>
+                    <content:AutoCompleteBox Grid.Column="1" VerticalAlignment="Center" x:Name="tb" FilterMode="Contains" Background="{Binding Path=Background, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" Style="{StaticResource AutoCompleteBoxStyle}" KeyDown="tb_KeyDown" BorderThickness="0" Placeholder="Search currency.."/>
+                </Grid>
+            </materialDesign:ColorZone>
+            <Label Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold">Select 'To' currency</Label>
+            <materialDesign:ColorZone Grid.Column="3" Grid.Row="0" VerticalAlignment="Center" Mode="Standard" Padding="8 4 8 4" CornerRadius="8" Margin="30 14 30 14" materialDesign:ShadowAssist.ShadowDepth="Depth2">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Button Style="{StaticResource MaterialDesignToolButton}" Grid.Column="0" VerticalAlignment="Center">
+                        <materialDesign:PackIcon
+                        Kind="Search"
+                        Opacity=".56"/>
+                    </Button>
+                    <content:AutoCompleteBox Grid.Column="1" VerticalAlignment="Center" x:Name="tb2" FilterMode="Contains" Background="{Binding Path=Background, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" Style="{StaticResource AutoCompleteBoxStyle}" KeyDown="tb2_KeyDown" BorderThickness="0" Placeholder="Search currency.."/>
+                </Grid>
+            </materialDesign:ColorZone>
+        </Grid>
     </Grid>
 </Window>
