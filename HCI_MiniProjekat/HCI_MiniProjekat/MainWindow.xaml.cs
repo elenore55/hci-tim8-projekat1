@@ -170,7 +170,7 @@ namespace HCI_MiniProjekat
 
         private void Chip_DeleteClick(object sender, RoutedEventArgs e)
         {
-            string selected = sender.ToString(); // [31..]
+            string selected = sender.ToString().Substring(sender.ToString().Length - 3); // [31..]
             foreach (string s in FromCurrecies)
             {
                 if (s.StartsWith(selected))
@@ -212,18 +212,12 @@ namespace HCI_MiniProjekat
                 }
                 MessageBox.Show("Izabarali ste sve opcije!");
                 DisplayChart();
+                DataContext = this;
             }
         }
 
         private void DisplayChart()
         {
-            // imamo FromCurrencies
-            // imamo ToCurrency
-            // treba function, npr. FX_MONTH
-            // FromDate.SelectedDate.GetValueOrDefault i ToDate.SelectedDate.GetValueOrDefault() - start i end date
-            // Type.SelectedItem - open, close, high, low
-            // Interval.SelectedItem - funkcija
-
             DateTime startDate = FromDate.SelectedDate.GetValueOrDefault();
             DateTime endDate = ToDate.SelectedDate.GetValueOrDefault();
 
@@ -234,20 +228,16 @@ namespace HCI_MiniProjekat
 
                 using (WebClient client = new WebClient())
                 {
-                    // Time Series FX ({Intertval.Text})
                     JavaScriptSerializer js = new JavaScriptSerializer();
                     dynamic json_data = js.Deserialize(client.DownloadString(queryUri), typeof(object));
                     dynamic data = json_data[$"Time Series FX ({Intertval.Text})"];
                     RouteValueDictionary result = new RouteValueDictionary(data);
                     ChartValues<double> values = new ChartValues<double>();
 
-
                     foreach (var key in result.Keys)
                     {
-                        MessageBox.Show(key);
-
                         DateTime oDate = Convert.ToDateTime(key);
-                        if (DateTime.Compare(oDate, startDate) >= 0 && DateTime.Compare(oDate, endDate) <= 0)
+                        if (DateTime.Compare(oDate, startDate) >= 0)
                         {
                             XAxes.ElementAt(0).Labels.Add(key);
                             XAxesLine.ElementAt(0).Labels.Add(key);
@@ -279,15 +269,12 @@ namespace HCI_MiniProjekat
                             Fill = null
                         }
                     );
-
-                    DataContext = this;
                 }
             }
         }
 
         private string FormURL(string from)
         {
-            // return "https://www.alphavantage.co/query?function=FX_DAILY&from_symbol=EUR&to_symbol=USD&apikey=UWN3B1CJC7X8TNGE";
             string fn = $"FX_{Intertval.Text.ToUpper()}";
             string to = ToCurrency.Substring(0, 3);
             if (fn != "FX_INTRADAY")

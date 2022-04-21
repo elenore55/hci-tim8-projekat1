@@ -127,11 +127,11 @@
                     <ComboBoxItem
                     Content="1. Open" />
                     <ComboBoxItem
-                    Content="2. Close" />
+                    Content="2. High" />
                     <ComboBoxItem
-                    Content="3. High" />
+                    Content="3. Low" />
                     <ComboBoxItem
-                    Content="4. Low" />
+                    Content="4. Close" />
                 </ComboBox>
                 <ComboBox x:Name="Intertval" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center"
                     materialDesign:HintAssist.Hint="Interval Type"
