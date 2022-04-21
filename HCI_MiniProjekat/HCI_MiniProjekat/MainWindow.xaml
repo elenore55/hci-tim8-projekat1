@@ -168,9 +168,9 @@
                 <ColumnDefinition  Width="5"/>
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <lvc:CartesianChart Series="{Binding SeriesLine}" LegendPosition="Bottom" XAxes="{Binding XAxesLine}"  YAxes="{Binding YAxesLine}" />
+            <lvc:CartesianChart Series="{Binding SeriesLine}" ZoomMode="Both" LegendPosition="Bottom" XAxes="{Binding XAxesLine}"  YAxes="{Binding YAxesLine}" />
             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
-            <lvc:CartesianChart Grid.Column="2" MouseDoubleClick="CartesianChart_MouseDoubleClick" Series="{Binding Series}" LegendPosition="Bottom"  XAxes="{Binding XAxes}"  YAxes="{Binding YAxes}" />
+            <lvc:CartesianChart Grid.Column="2" MouseDoubleClick="CartesianChart_MouseDoubleClick" Series="{Binding Series}" ZoomMode="Both" LegendPosition="Bottom"  XAxes="{Binding XAxes}"  YAxes="{Binding YAxes}" />
         </Grid>
     </Grid>
 

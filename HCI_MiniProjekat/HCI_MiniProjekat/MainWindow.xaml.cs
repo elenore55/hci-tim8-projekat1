@@ -68,7 +68,7 @@ namespace HCI_MiniProjekat
                 new Axis
                 {
                     Name = "My Y Axis",
-                    TextSize = 10,
+                    TextSize = 8,
                     LabelsPaint = new SolidColorPaint(SKColors.Black),
                     // Labeler = Labelers.Default
                 }
@@ -94,7 +94,7 @@ namespace HCI_MiniProjekat
                 new Axis
                 {
                     Name = "My Y Axis",
-                    TextSize = 10,
+                    TextSize = 8,
                     LabelsPaint = new SolidColorPaint(SKColors.Black),
                     // Labeler = Labelers.Default
                 }
