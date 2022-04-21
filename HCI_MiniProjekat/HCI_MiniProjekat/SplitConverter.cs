@@ -18,7 +18,7 @@ namespace HCI_MiniProjekat
             {
                 return "";
             }
-            return ((string)value).Split(" ")[0];
+            return ((string)value).Split(' ')[0];
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

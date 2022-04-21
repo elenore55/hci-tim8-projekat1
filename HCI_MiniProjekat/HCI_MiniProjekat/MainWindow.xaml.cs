@@ -1,16 +1,15 @@
 ﻿using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView.Painting;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.VisualBasic.FileIO;
 using SkiaSharp;
 using System;
+using Microsoft.VisualBasic.FileIO;
+using System.Web.Script.Serialization;
 using System.Collections.Generic;
 using System.Linq;
-using LiveCharts;
 using System.Net;
-using System.Text.Json;
 using System.Text;
 using System.Threading.Tasks;
+using LiveCharts;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -18,9 +17,11 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using LiveChartsCore.SkiaSharpView;
+using Microsoft.AspNetCore.Routing;
 
 namespace HCI_MiniProjekat
 {
@@ -101,7 +102,7 @@ namespace HCI_MiniProjekat
         private void LoadCurrencies()
         {
             List<string> cur = new List<string>();
-            using (TextFieldParser parser = new TextFieldParser("..\\..\\..\\physical_currency_list.csv"))
+            using (TextFieldParser parser = new TextFieldParser("..\\..\\physical_currency_list.csv"))
             {
                 parser.TextFieldType = FieldType.Delimited;
                 parser.SetDelimiters(",");
@@ -113,7 +114,7 @@ namespace HCI_MiniProjekat
                     cur.Add(c);
                 }
             }
-            using (TextFieldParser parser = new TextFieldParser("..\\..\\..\\digital_currency_list.csv"))
+            using (TextFieldParser parser = new TextFieldParser("..\\..\\digital_currency_list.csv"))
             {
                 parser.TextFieldType = FieldType.Delimited;
                 parser.SetDelimiters(",");
@@ -160,7 +161,7 @@ namespace HCI_MiniProjekat
                 }
                 ToCurrency = selected;
                 element.Visibility = 0;
-                element.Content = ToCurrency.Split(" ")[0];
+                element.Content = ToCurrency.Split(' ')[0];
                 element.ToolTip = ToCurrency;
                 //Second.Items.Refresh();
                 tb2.Text = "";
@@ -169,7 +170,7 @@ namespace HCI_MiniProjekat
 
         private void Chip_DeleteClick(object sender, RoutedEventArgs e)
         {
-            string selected = sender.ToString()[31..];
+            string selected = sender.ToString(); // [31..]
             foreach (string s in FromCurrecies)
             {
                 if (s.StartsWith(selected))
@@ -234,7 +235,8 @@ namespace HCI_MiniProjekat
                 using (WebClient client = new WebClient())
                 {
                     // Time Series FX ({Intertval.Text})
-                    dynamic json_data = JsonSerializer.Deserialize<Dictionary<string, dynamic>>(client.DownloadString(queryUri));
+                    JavaScriptSerializer js = new JavaScriptSerializer();
+                    dynamic json_data = js.Deserialize(client.DownloadString(queryUri), typeof(object));
                     dynamic data = json_data[$"Time Series FX ({Intertval.Text})"];
                     RouteValueDictionary result = new RouteValueDictionary(data);
                     ChartValues<double> values = new ChartValues<double>();
@@ -243,7 +245,7 @@ namespace HCI_MiniProjekat
                     foreach (var key in result.Keys)
                     {
                         MessageBox.Show(key);
-                        
+
                         DateTime oDate = Convert.ToDateTime(key);
                         if (DateTime.Compare(oDate, startDate) >= 0 && DateTime.Compare(oDate, endDate) <= 0)
                         {
