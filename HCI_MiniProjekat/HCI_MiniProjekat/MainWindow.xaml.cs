@@ -33,6 +33,7 @@ namespace HCI_MiniProjekat
         public List<string> FromCurrecies { get; set; } = new List<string>();
         public string ToCurrency { get; set; } = "";
         public List<string> Currencies { get; set; }
+        public string minutes;
 
         public List<ISeries> Series { get; set; } = new List<ISeries>();
         public List<ISeries> SeriesLine { get; set; } = new List<ISeries>();
@@ -47,10 +48,10 @@ namespace HCI_MiniProjekat
             tb2.ItemsSource = Currencies;
         }
 
-        public List<LiveChartsCore.SkiaSharpView.Axis> XAxes { get; set; }
-            = new List<LiveChartsCore.SkiaSharpView.Axis>
+        public List<Axis> XAxes { get; set; }
+            = new List<Axis>
             {
-                new LiveChartsCore.SkiaSharpView.Axis
+                new Axis
                 {
                     Name = "My X Axis",
                     NamePaint = new SolidColorPaint(SKColors.Black),
@@ -61,10 +62,10 @@ namespace HCI_MiniProjekat
                 }
             };
 
-        public List<LiveChartsCore.SkiaSharpView.Axis> YAxes { get; set; }
-            = new List<LiveChartsCore.SkiaSharpView.Axis>
+        public List<Axis> YAxes { get; set; }
+            = new List<Axis>
             {
-                new LiveChartsCore.SkiaSharpView.Axis
+                new Axis
                 {
                     Name = "My Y Axis",
                     TextSize = 10,
@@ -73,10 +74,10 @@ namespace HCI_MiniProjekat
                 }
             };
 
-        public List<LiveChartsCore.SkiaSharpView.Axis> XAxesLine { get; set; }
-            = new List<LiveChartsCore.SkiaSharpView.Axis>
+        public List<Axis> XAxesLine { get; set; }
+            = new List<Axis>
             {
-                new LiveChartsCore.SkiaSharpView.Axis
+                new Axis
                 {
                     Name = "My X Axis",
                     NamePaint = new SolidColorPaint(SKColors.Black),
@@ -87,10 +88,10 @@ namespace HCI_MiniProjekat
                 }
             };
 
-        public List<LiveChartsCore.SkiaSharpView.Axis> YAxesLine { get; set; }
-            = new List<LiveChartsCore.SkiaSharpView.Axis>
+        public List<Axis> YAxesLine { get; set; }
+            = new List<Axis>
             {
-                new LiveChartsCore.SkiaSharpView.Axis
+                new Axis
                 {
                     Name = "My Y Axis",
                     TextSize = 10,
@@ -187,6 +188,7 @@ namespace HCI_MiniProjekat
             ToCurrency = "";
             element.Visibility = Visibility.Collapsed;
         }
+
         private void Intertval_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (Intertval.SelectedIndex == 0)
@@ -198,6 +200,7 @@ namespace HCI_MiniProjekat
                 TimeInterval.Visibility = Visibility.Collapsed;
             }
         }
+
         private void Fetch_Click(object sender, RoutedEventArgs e)
         {
             if (FromCurrecies.Count == 0 || ToCurrency == "" || FromDate.SelectedDate == null || ToDate == null || Type.SelectedItem == null || Intertval.SelectedItem == null)
@@ -211,8 +214,9 @@ namespace HCI_MiniProjekat
                     MessageBox.Show("Datumi moraju biti izabrani hronoloski!");
                 }
                 MessageBox.Show("Izabarali ste sve opcije!");
-                DisplayChart();
                 DataContext = this;
+                minutes = TimeInterval.Text;
+                DisplayChart();
             }
         }
 
@@ -230,14 +234,17 @@ namespace HCI_MiniProjekat
                 {
                     JavaScriptSerializer js = new JavaScriptSerializer();
                     dynamic json_data = js.Deserialize(client.DownloadString(queryUri), typeof(object));
-                    dynamic data = json_data[$"Time Series FX ({Intertval.Text})"];
+                    string data_key;
+                    if (Intertval.Text != "Intraday") data_key = $"Time Series FX ({Intertval.Text})";
+                    else data_key = $"Time Series FX ({minutes})";
+                    dynamic data = json_data[data_key];
                     RouteValueDictionary result = new RouteValueDictionary(data);
                     ChartValues<double> values = new ChartValues<double>();
 
                     foreach (var key in result.Keys)
                     {
                         DateTime oDate = Convert.ToDateTime(key);
-                        if (DateTime.Compare(oDate, startDate) >= 0)
+                        if (DateTime.Compare(oDate, startDate) >= 0 && DateTime.Compare(oDate, endDate) <= 0)
                         {
                             XAxes.ElementAt(0).Labels.Add(key);
                             XAxesLine.ElementAt(0).Labels.Add(key);
@@ -279,7 +286,7 @@ namespace HCI_MiniProjekat
             string to = ToCurrency.Substring(0, 3);
             if (fn != "FX_INTRADAY")
                 return $"https://www.alphavantage.co/query?function={fn}&from_symbol={from}&to_symbol={to}&apikey=UWN3B1CJC7X8TNGE";
-            return $"https://www.alphavantage.co/query?function={fn}&from_symbol={from}&to_symbol={to}&interval={TimeInterval.Text}min&apikey=UWN3B1CJC7X8TNGE";
+            return $"https://www.alphavantage.co/query?function={fn}&from_symbol={from}&to_symbol={to}&interval={TimeInterval.Text}&apikey=UWN3B1CJC7X8TNGE";
         }
 
         private void CartesianChart_MouseDoubleClick(object sender, MouseButtonEventArgs e)
