@@ -53,7 +53,7 @@ namespace HCI_MiniProjekat
             {
                 new Axis
                 {
-                    Name = "My X Axis",
+                    Name = "Date",
                     NamePaint = new SolidColorPaint(SKColors.Black),
                     Labels = new List<string>(),
                     LabelsPaint = new SolidColorPaint(SKColors.Blue),
@@ -67,10 +67,10 @@ namespace HCI_MiniProjekat
             {
                 new Axis
                 {
-                    Name = "My Y Axis",
+                    Name = "Value",
                     TextSize = 8,
                     LabelsPaint = new SolidColorPaint(SKColors.Black),
-                    // Labeler = Labelers.Default
+                    SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray) { StrokeThickness = 2 }
                 }
             };
 
@@ -79,7 +79,7 @@ namespace HCI_MiniProjekat
             {
                 new Axis
                 {
-                    Name = "My X Axis",
+                    Name = "Date",
                     NamePaint = new SolidColorPaint(SKColors.Black),
                     Labels = new List<string>(),
                     LabelsPaint = new SolidColorPaint(SKColors.Blue),
@@ -93,10 +93,10 @@ namespace HCI_MiniProjekat
             {
                 new Axis
                 {
-                    Name = "My Y Axis",
+                    Name = "Value",
                     TextSize = 8,
                     LabelsPaint = new SolidColorPaint(SKColors.Black),
-                    // Labeler = Labelers.Default
+                    SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray) { StrokeThickness = 2 }
                 }
             };
 
@@ -214,6 +214,8 @@ namespace HCI_MiniProjekat
                     MessageBox.Show("Datumi moraju biti izabrani hronoloski!");
                 }
                 MessageBox.Show("Izabarali ste sve opcije!");
+                SeriesLine.Clear();
+                Series.Clear();
                 DataContext = this;
                 minutes = TimeInterval.Text;
                 DisplayChart();
@@ -270,7 +272,6 @@ namespace HCI_MiniProjekat
                         new LineSeries<double>
                         {
                             Values = values,
-                            Stroke = new SolidColorPaint(SKColors.Red) { StrokeThickness = 2 },
                             Name = curr,
                             GeometrySize = 10,
                             Fill = null

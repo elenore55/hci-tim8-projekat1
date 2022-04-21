@@ -16,6 +16,7 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
         d:DesignHeight="100" d:DesignWidth="100" d:DataContext="{d:DesignInstance local:MainWindow}"
+        Icon="icon.ico"
         Title="CourseChangeTracker" Height="700" Width="1000" DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Window.Resources>
         <Style x:Key="AutoCompleteBoxStyle" TargetType="{x:Type content:AutoCompleteBox}">
