@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HCI_MiniProjekat"
+        xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
         xmlns:content="clr-namespace:System.Windows.Controls;assembly=DotNetProjects.Input.Toolkit"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -14,6 +15,7 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
+        d:DesignHeight="100" d:DesignWidth="100" d:DataContext="{d:DesignInstance local:MainWindow}"
         Title="CourseChangeTracker" Height="700" Width="1000" DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Window.Resources>
         <Style x:Key="AutoCompleteBoxStyle" TargetType="{x:Type content:AutoCompleteBox}">
@@ -110,25 +112,25 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <DatePicker x:Name="FromDate" Grid.Column="0" VerticalAlignment="Top"
-                  Width="140"
-                  materialDesign:HintAssist.Hint="Pick Date 'From'"
-                  materialDesign:TextFieldAssist.HasClearButton="True"
-                  Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
+                    Width="140"
+                    materialDesign:HintAssist.Hint="Pick Date 'From'"
+                    materialDesign:TextFieldAssist.HasClearButton="True"
+                    Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
                 <DatePicker x:Name="ToDate" Grid.Column="1" VerticalAlignment="Top"
-                  Width="140"
-                  materialDesign:HintAssist.Hint="Pick Date 'To'"
-                  materialDesign:TextFieldAssist.HasClearButton="True"
-                  Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
+                    Width="140"
+                    materialDesign:HintAssist.Hint="Pick Date 'To'"
+                    materialDesign:TextFieldAssist.HasClearButton="True"
+                    Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
                 <ComboBox x:Name="Type" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"
                     materialDesign:HintAssist.Hint="Data Type"
                     materialDesign:TextFieldAssist.HasClearButton="True">
-                        <ComboBoxItem
+                    <ComboBoxItem
                     Content="1. Open" />
-                        <ComboBoxItem
+                    <ComboBoxItem
                     Content="2. Close" />
-                        <ComboBoxItem
+                    <ComboBoxItem
                     Content="3. High" />
-                        <ComboBoxItem
+                    <ComboBoxItem
                     Content="4. Low" />
                 </ComboBox>
                 <ComboBox x:Name="Intertval" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center"
@@ -160,5 +162,16 @@
                 <Button Grid.Column="5" HorizontalAlignment="Center" materialDesign:ShadowAssist.ShadowDepth="Depth2" Click="Fetch_Click">Fetch</Button>
             </Grid>
         </Grid>
+        <Grid Grid.Row="1" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition  Width="5"/>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <lvc:CartesianChart Series="{Binding SeriesLine}" LegendPosition="Bottom" XAxes="{Binding XAxesLine}"  YAxes="{Binding YAxesLine}" />
+            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+            <lvc:CartesianChart Grid.Column="2" MouseDoubleClick="CartesianChart_MouseDoubleClick" Series="{Binding Series}" LegendPosition="Bottom"  XAxes="{Binding XAxes}"  YAxes="{Binding YAxes}" />
+        </Grid>
     </Grid>
+
 </Window>
