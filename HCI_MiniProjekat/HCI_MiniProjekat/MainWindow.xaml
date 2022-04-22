@@ -15,7 +15,6 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
-        d:DesignHeight="100" d:DesignWidth="100" d:DataContext="{d:DesignInstance local:MainWindow}"
         Icon="icon.ico"
         Title="CourseChangeTracker" Height="700" Width="1000" DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Window.Resources>
@@ -122,7 +121,7 @@
                     materialDesign:HintAssist.Hint="Pick Date 'To'"
                     materialDesign:TextFieldAssist.HasClearButton="True"
                     Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
-                <ComboBox x:Name="Type" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"
+                <ComboBox Margin="0 11 0 0" x:Name="Type" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Top"
                     materialDesign:HintAssist.Hint="Data Type"
                     materialDesign:TextFieldAssist.HasClearButton="True">
                     <ComboBoxItem
@@ -134,7 +133,7 @@
                     <ComboBoxItem
                     Content="4. Close" />
                 </ComboBox>
-                <ComboBox x:Name="Intertval" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center"
+                <ComboBox Margin="0 11 0 0" x:Name="Intertval" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Top"
                     materialDesign:HintAssist.Hint="Interval Type"
                     materialDesign:TextFieldAssist.HasClearButton="True" SelectionChanged="Intertval_SelectionChanged">
                     <ComboBoxItem
@@ -146,7 +145,7 @@
                     <ComboBoxItem
                     Content="Monthly" />
                 </ComboBox>
-                <ComboBox x:Name="TimeInterval" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center"
+                <ComboBox Margin="0 11 0 0" x:Name="TimeInterval" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Top"
                     materialDesign:HintAssist.Hint="Minutes"
                     materialDesign:TextFieldAssist.HasClearButton="True">
                     <ComboBoxItem
