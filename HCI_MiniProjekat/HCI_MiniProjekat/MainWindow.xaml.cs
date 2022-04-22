@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using LiveCharts;
 using System.Windows;
 using System.Windows.Controls;
@@ -35,6 +35,7 @@ namespace HCI_MiniProjekat
         public string ToCurrency { get; set; } = "";
         public List<string> Currencies { get; set; }
         public string minutes;
+        public SplashScreenWindow viewer = new SplashScreenWindow();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -245,7 +246,20 @@ namespace HCI_MiniProjekat
                 SeriesLine.Clear();
                 Series.Clear();
                 minutes = TimeInterval.Text;
+
+                Thread viewerThread = new Thread(delegate ()
+                {
+                    viewer = new SplashScreenWindow();
+                    viewer.Show();
+                    System.Windows.Threading.Dispatcher.Run();
+                });
+
+                viewerThread.SetApartmentState(ApartmentState.STA);
+                viewerThread.Start();
+
                 DisplayChart();
+                DataContext = this;
+                System.Windows.Threading.Dispatcher.FromThread(viewerThread).InvokeShutdown();
             }
         }
 
@@ -255,7 +269,7 @@ namespace HCI_MiniProjekat
         }
 
         private void DisplayChart()
-        {
+        {          
             DateTime startDate = FromDate.SelectedDate.GetValueOrDefault();
             DateTime endDate = ToDate.SelectedDate.GetValueOrDefault();
 
@@ -318,7 +332,6 @@ namespace HCI_MiniProjekat
             Series = tempSeries;
             SeriesLine = tempSeriesLine;
 
-            DataContext = this;
         }
 
         private string FormURL(string from)
@@ -338,6 +351,11 @@ namespace HCI_MiniProjekat
         private void CartesianChartLine_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             MessageBox.Show("Double clicked line");
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            Application.Current.Shutdown();
         }
     }
 }
