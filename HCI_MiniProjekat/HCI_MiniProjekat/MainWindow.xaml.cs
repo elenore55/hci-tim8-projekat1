@@ -334,5 +334,10 @@ namespace HCI_MiniProjekat
         {
             MessageBox.Show("Double clicked!");
         }
+
+        private void CartesianChartLine_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            MessageBox.Show("Double clicked line");
+        }
     }
 }
