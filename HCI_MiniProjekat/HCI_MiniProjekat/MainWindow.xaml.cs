@@ -22,21 +22,49 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using LiveChartsCore.SkiaSharpView;
 using Microsoft.AspNetCore.Routing;
+using System.ComponentModel;
 
 namespace HCI_MiniProjekat
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         public List<string> FromCurrecies { get; set; } = new List<string>();
         public string ToCurrency { get; set; } = "";
         public List<string> Currencies { get; set; }
         public string minutes;
 
-        public List<ISeries> Series { get; set; } = new List<ISeries>();
-        public List<ISeries> SeriesLine { get; set; } = new List<ISeries>();
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private List<ISeries> _series = new List<ISeries>();
+        public List<ISeries> Series
+        {
+            get
+            {
+                return _series;
+            }
+            set
+            {
+                _series = value;
+                OnPropertyChanged(new PropertyChangedEventArgs("Series"));
+            }
+        }
+
+        private List<ISeries> _seriesLine = new List<ISeries>();
+        public List<ISeries> SeriesLine
+        {
+            get
+            {
+                return _seriesLine;
+            }
+            set
+            {
+                _seriesLine = value;
+                OnPropertyChanged(new PropertyChangedEventArgs("SeriesLine"));
+            }
+        }
 
         public MainWindow()
         {
@@ -216,16 +244,23 @@ namespace HCI_MiniProjekat
                 MessageBox.Show("Izabarali ste sve opcije!");
                 SeriesLine.Clear();
                 Series.Clear();
-                DataContext = this;
                 minutes = TimeInterval.Text;
                 DisplayChart();
             }
+        }
+
+        public void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            PropertyChanged?.Invoke(this, e);
         }
 
         private void DisplayChart()
         {
             DateTime startDate = FromDate.SelectedDate.GetValueOrDefault();
             DateTime endDate = ToDate.SelectedDate.GetValueOrDefault();
+
+            List<ISeries> tempSeries = new List<ISeries>();
+            List<ISeries> tempSeriesLine = new List<ISeries>();
 
             foreach (string curr in FromCurrecies)
             {
@@ -259,7 +294,7 @@ namespace HCI_MiniProjekat
                         }
                     }
 
-                    Series.Add(
+                    tempSeries.Add(
                         new ColumnSeries<double>
                         {
                             Values = values,
@@ -268,7 +303,7 @@ namespace HCI_MiniProjekat
                         }
                     );
 
-                    SeriesLine.Add(
+                    tempSeriesLine.Add(
                         new LineSeries<double>
                         {
                             Values = values,
@@ -279,6 +314,11 @@ namespace HCI_MiniProjekat
                     );
                 }
             }
+
+            Series = tempSeries;
+            SeriesLine = tempSeriesLine;
+
+            DataContext = this;
         }
 
         private string FormURL(string from)
