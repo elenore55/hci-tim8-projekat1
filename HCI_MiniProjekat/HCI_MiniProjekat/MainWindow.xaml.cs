@@ -233,13 +233,13 @@ namespace HCI_MiniProjekat
 
         private void Fetch_Click(object sender, RoutedEventArgs e)
         {
-            if (FromCurrecies.Count == 0 || ToCurrency == "" || ToDate == null || Type.SelectedItem == null || Intertval.SelectedItem == null)
+            if (FromCurrecies.Count == 0 || ToCurrency == "" || Type.SelectedItem == null || Intertval.SelectedItem == null)
             {
                 MessageBox.Show("You did not fill in the required information!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             else
             {
-                if (FromDate.SelectedDate.GetValueOrDefault().CompareTo(ToDate.SelectedDate.GetValueOrDefault()) > 0)
+                if (!AreDatesChronological())
                 {
                     MessageBox.Show("Dates must be chosen chronologically!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
@@ -345,7 +345,6 @@ namespace HCI_MiniProjekat
                             Values = values,
                             Name = curr,
                             GroupPadding = 10
-
                         }
                     );
 
@@ -386,6 +385,15 @@ namespace HCI_MiniProjekat
                 return DateTime.Compare(date, FromDate.SelectedDate.Value) >= 0;
             }
             return DateTime.Compare(date, ToDate.SelectedDate.Value) <= 0 && DateTime.Compare(date, FromDate.SelectedDate.Value) >= 0;
+        }
+
+        private bool AreDatesChronological()
+        {
+            if (FromDate.SelectedDate != null && ToDate.SelectedDate != null)
+            {
+                return FromDate.SelectedDate.GetValueOrDefault().CompareTo(ToDate.SelectedDate.GetValueOrDefault()) <= 0;
+            }
+            return true;
         }
 
         private void CartesianChart_MouseDoubleClick(object sender, MouseButtonEventArgs e)

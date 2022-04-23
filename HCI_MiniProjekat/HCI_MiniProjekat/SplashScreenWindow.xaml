@@ -9,14 +9,17 @@
         Title="Loading" Height="200" Width="400"
         WindowStyle ="None"
         AllowsTransparency="True"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         >
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="220"/>
             <ColumnDefinition Width="30"/>
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="1">
-            <fa:ImageAwesome Icon="Spinner" Spin="True" SpinDuration="2" Margin="5" />
+            <fa:ImageAwesome Icon="Spinner" Spin="True" SpinDuration="3" Margin="5" />
         </Grid>
         <Grid Grid.Column="0">
             <TextBlock HorizontalAlignment="Right" Margin="5" VerticalAlignment="Center" FontSize="20">Loading...</TextBlock>
