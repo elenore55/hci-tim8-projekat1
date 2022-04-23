@@ -75,6 +75,7 @@ namespace HCI_MiniProjekat
             TimeInterval.Visibility = Visibility.Collapsed;
             tb.ItemsSource = Currencies;
             tb2.ItemsSource = Currencies;
+            ToDate.IsEnabled = false;
         }
 
         public List<Axis> XAxes { get; set; }
@@ -144,7 +145,7 @@ namespace HCI_MiniProjekat
                     cur.Add(c);
                 }
             }
-            using (TextFieldParser parser = new TextFieldParser("..\\..\\digital_currency_list.csv"))
+           /** using (TextFieldParser parser = new TextFieldParser("..\\..\\digital_currency_list.csv"))
             {
                 parser.TextFieldType = FieldType.Delimited;
                 parser.SetDelimiters(",");
@@ -155,7 +156,7 @@ namespace HCI_MiniProjekat
                     string c = $"{fields[0]} - {fields[1]}";
                     cur.Add(c);
                 }
-            }
+            }**/
             Currencies = cur;
         }
 
@@ -344,6 +345,7 @@ namespace HCI_MiniProjekat
                             Values = values,
                             Name = curr,
                             GroupPadding = 10
+
                         }
                     );
 
@@ -399,6 +401,11 @@ namespace HCI_MiniProjekat
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             Application.Current.Shutdown();
+        }
+
+        private void FromDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ToDate.IsEnabled = true;
         }
     }
 }

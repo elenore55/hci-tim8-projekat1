@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HCI_MiniProjekat"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
         xmlns:content="clr-namespace:System.Windows.Controls;assembly=DotNetProjects.Input.Toolkit"
@@ -103,7 +104,7 @@
                         IsDeletable="True"
                         ToolTip="{Binding ToCurrency}" Background="LightCyan" HorizontalAlignment="Center" VerticalAlignment="Center" DeleteClick="element_DeleteClick" materialDesign:ShadowAssist.ShadowDepth="Depth3">
             </materialDesign:Chip>
-            <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4">
+            <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" ClipToBounds="True">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
@@ -112,17 +113,22 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <DatePicker x:Name="FromDate" Grid.Column="0" VerticalAlignment="Top"
+                <DatePicker Margin="-4" x:Name="FromDate" Grid.Column="0" VerticalAlignment="Top"
                     Width="140"
                     materialDesign:HintAssist.Hint="Pick Date 'From'"
+                    materialDesign:HintAssist.HelperText="(Optional)"
                     materialDesign:TextFieldAssist.HasClearButton="True"
-                    Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
-                <DatePicker x:Name="ToDate" Grid.Column="1" VerticalAlignment="Top"
+                    DisplayDateEnd="{x:Static sys:DateTime.Now}"
+                    Style="{StaticResource MaterialDesignFloatingHintDatePicker}" 
+                    SelectedDateChanged="FromDate_SelectedDateChanged"/>
+                <DatePicker Margin="-4" x:Name="ToDate" Grid.Column="1" VerticalAlignment="Top"
                     Width="140"
                     materialDesign:HintAssist.Hint="Pick Date 'To'"
                     materialDesign:TextFieldAssist.HasClearButton="True"
+                    SelectedDate="{x:Static sys:DateTime.Now}"
+                    DisplayDateEnd="{x:Static sys:DateTime.Now}"
                     Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
-                <ComboBox Margin="0 11 0 0" x:Name="Type" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Top"
+                <ComboBox Margin="0 7 0 0" x:Name="Type" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Top"
                     materialDesign:HintAssist.Hint="Data Type"
                     materialDesign:TextFieldAssist.HasClearButton="True">
                     <ComboBoxItem
@@ -134,7 +140,7 @@
                     <ComboBoxItem
                     Content="4. Close" />
                 </ComboBox>
-                <ComboBox Margin="0 11 0 0" x:Name="Intertval" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Top"
+                <ComboBox Margin="0 7 0 0" x:Name="Intertval" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Top"
                     materialDesign:HintAssist.Hint="Interval Type"
                     materialDesign:TextFieldAssist.HasClearButton="True" SelectionChanged="Intertval_SelectionChanged">
                     <ComboBoxItem
@@ -146,7 +152,7 @@
                     <ComboBoxItem
                     Content="Monthly" />
                 </ComboBox>
-                <ComboBox Margin="0 11 0 0" x:Name="TimeInterval" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Top"
+                <ComboBox Margin="0 7 0 0" x:Name="TimeInterval" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Top"
                     materialDesign:HintAssist.Hint="Minutes"
                     materialDesign:TextFieldAssist.HasClearButton="True">
                     <ComboBoxItem
@@ -171,7 +177,7 @@
             </Grid.ColumnDefinitions>
             <lvc:CartesianChart Series="{Binding SeriesLine}" MouseDoubleClick="CartesianChartLine_MouseDoubleClick" ZoomMode="Both" LegendPosition="Bottom" XAxes="{Binding XAxesLine}"  YAxes="{Binding YAxesLine}" />
             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
-            <lvc:CartesianChart Grid.Column="2" MouseDoubleClick="CartesianChart_MouseDoubleClick" Series="{Binding Series}" ZoomMode="Both" LegendPosition="Bottom"  XAxes="{Binding XAxes}"  YAxes="{Binding YAxes}" />
+            <lvc:CartesianChart Grid.Column="2" Series="{Binding Series}" ZoomMode="Both" LegendPosition="Bottom"  XAxes="{Binding XAxes}"  YAxes="{Binding YAxes}" />
         </Grid>
     </Grid>
 
