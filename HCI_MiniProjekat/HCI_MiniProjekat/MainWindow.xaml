@@ -18,6 +18,7 @@
         mc:Ignorable="d"
         Icon="icon.ico"
         Closing="Window_Closing"
+        WindowState="Maximized"
         Title="CourseChangeTracker" Height="700" Width="1000" DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Window.Resources>
         <Style x:Key="AutoCompleteBoxStyle" TargetType="{x:Type content:AutoCompleteBox}">
