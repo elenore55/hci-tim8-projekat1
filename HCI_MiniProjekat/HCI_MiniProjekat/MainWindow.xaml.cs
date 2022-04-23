@@ -233,7 +233,7 @@ namespace HCI_MiniProjekat
 
         private void Fetch_Click(object sender, RoutedEventArgs e)
         {
-            if (FromCurrecies.Count == 0 || ToCurrency == "" || FromDate.SelectedDate == null || ToDate == null || Type.SelectedItem == null || Intertval.SelectedItem == null)
+            if (FromCurrecies.Count == 0 || ToCurrency == "" || ToDate == null || Type.SelectedItem == null || Intertval.SelectedItem == null)
             {
                 MessageBox.Show("You did not fill in the required information!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
