@@ -286,9 +286,6 @@ namespace HCI_MiniProjekat
 
         private void DisplayChart(List<string> errors)
         {
-            DateTime startDate = FromDate.SelectedDate.GetValueOrDefault();
-            DateTime endDate = ToDate.SelectedDate.GetValueOrDefault();
-
             List<ISeries> tempSeries = new List<ISeries>();
             List<ISeries> tempSeriesLine = new List<ISeries>();
 
@@ -328,7 +325,7 @@ namespace HCI_MiniProjekat
                     foreach (string key in result.Keys)
                     {
                         DateTime oDate = Convert.ToDateTime(key);
-                        if (DateTime.Compare(oDate, startDate) >= 0 && DateTime.Compare(oDate, endDate) <= 0)
+                        if (IsInInterval(oDate))
                         {
                             XAxes.ElementAt(0).Labels.Add(key);
                             XAxesLine.ElementAt(0).Labels.Add(key);
@@ -373,6 +370,20 @@ namespace HCI_MiniProjekat
             if (fn != "FX_INTRADAY")
                 return $"https://www.alphavantage.co/query?function={fn}&from_symbol={from}&to_symbol={to}&apikey=UWN3B1CJC7X8TNGE";
             return $"https://www.alphavantage.co/query?function={fn}&from_symbol={from}&to_symbol={to}&interval={TimeInterval.Text}&apikey=UWN3B1CJC7X8TNGE";
+        }
+
+        private bool IsInInterval(DateTime date)
+        {
+            if (FromDate.SelectedDate == null && ToDate.SelectedDate == null) return true;
+            if (FromDate.SelectedDate == null)
+            {
+                return DateTime.Compare(date, ToDate.SelectedDate.Value) <= 0;
+            }
+            if (ToDate.SelectedDate == null)
+            {
+                return DateTime.Compare(date, FromDate.SelectedDate.Value) >= 0;
+            }
+            return DateTime.Compare(date, ToDate.SelectedDate.Value) <= 0 && DateTime.Compare(date, FromDate.SelectedDate.Value) >= 0;
         }
 
         private void CartesianChart_MouseDoubleClick(object sender, MouseButtonEventArgs e)
