@@ -83,7 +83,7 @@ namespace HCI_MiniProjekat
             {
                 new Axis
                 {
-                    Name = "Date",
+                    Name = "DateTime",
                     NamePaint = new SolidColorPaint(SKColors.Black),
                     Labels = new List<string>(),
                     LabelsPaint = new SolidColorPaint(SKColors.Blue),
@@ -109,7 +109,7 @@ namespace HCI_MiniProjekat
             {
                 new Axis
                 {
-                    Name = "Date",
+                    Name = "DateTime",
                     NamePaint = new SolidColorPaint(SKColors.Black),
                     Labels = new List<string>(),
                     LabelsPaint = new SolidColorPaint(SKColors.Blue),
@@ -290,6 +290,11 @@ namespace HCI_MiniProjekat
             List<ISeries> tempSeries = new List<ISeries>();
             List<ISeries> tempSeriesLine = new List<ISeries>();
 
+            YAxes.ElementAt(0).Name = $"Value - {Type.Text.Substring(3)}";
+            YAxesLine.ElementAt(0).Name = $"Value - {Type.Text.Substring(3)}";
+            XAxes.ElementAt(0).Name = $"DateTime - {Intertval.Text}";
+            XAxesLine.ElementAt(0).Name = $"DateTime - {Intertval.Text}";
+
             foreach (string curr in FromCurrecies)
             {
                 string queryURL = FormURL(curr.Substring(0, 3));
@@ -323,14 +328,24 @@ namespace HCI_MiniProjekat
                     XAxes.ElementAt(0).Labels.Clear();
                     XAxesLine.ElementAt(0).Labels.Clear();
 
+                    if (Intertval.Text == "Intraday")
+                    {
+                        string k = result.Keys.ElementAt(0);
+                        XAxes.ElementAt(0).Name += $" ({k.Substring(0, 10)})";
+                        XAxesLine.ElementAt(0).Name += $" ({k.Substring(0, 10)})";
+                    }
+
                     foreach (string key in result.Keys)
                     {
                         DateTime oDate = Convert.ToDateTime(key);
                         if (IsInInterval(oDate))
                         {
-                            XAxes.ElementAt(0).Labels.Add(key);
-                            XAxesLine.ElementAt(0).Labels.Add(key);
-                            object obj = new object();
+                            string label = key;
+                            if (Intertval.Text == "Intraday")
+                                label = key.Substring(11, 5);
+                            XAxes.ElementAt(0).Labels.Add(label);
+                            XAxesLine.ElementAt(0).Labels.Add(label);
+                            object obj;
                             result.TryGetValue(key, out obj);
                             RouteValueDictionary d = new RouteValueDictionary(obj);
                             d.TryGetValue(Type.Text.ToLower(), out obj);
