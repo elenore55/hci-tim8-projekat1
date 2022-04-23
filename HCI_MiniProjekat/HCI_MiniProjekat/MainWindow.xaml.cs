@@ -234,32 +234,48 @@ namespace HCI_MiniProjekat
         {
             if (FromCurrecies.Count == 0 || ToCurrency == "" || FromDate.SelectedDate == null || ToDate == null || Type.SelectedItem == null || Intertval.SelectedItem == null)
             {
-                MessageBox.Show("Niste Izabarali sve opcije!");
+                MessageBox.Show("You did not fill in the required information!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             else
             {
                 if (FromDate.SelectedDate.GetValueOrDefault().CompareTo(ToDate.SelectedDate.GetValueOrDefault()) > 0)
                 {
-                    MessageBox.Show("Datumi moraju biti izabrani hronoloski!");
+                    MessageBox.Show("Dates must be chosen chronologically!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-                MessageBox.Show("Izabarali ste sve opcije!");
-                SeriesLine.Clear();
-                Series.Clear();
-                minutes = TimeInterval.Text;
-
-                Thread viewerThread = new Thread(delegate ()
+                else
                 {
-                    viewer = new SplashScreenWindow();
-                    viewer.Show();
-                    System.Windows.Threading.Dispatcher.Run();
-                });
+                    SeriesLine.Clear();
+                    Series.Clear();
+                    minutes = TimeInterval.Text;
 
-                viewerThread.SetApartmentState(ApartmentState.STA);
-                viewerThread.Start();
+                    Thread viewerThread = new Thread(delegate ()
+                    {
+                        viewer = new SplashScreenWindow();
+                        viewer.Show();
+                        System.Windows.Threading.Dispatcher.Run();
+                    });
 
-                DisplayChart();
-                DataContext = this;
-                System.Windows.Threading.Dispatcher.FromThread(viewerThread).InvokeShutdown();
+                    viewerThread.SetApartmentState(ApartmentState.STA);
+                    viewerThread.Start();
+                    List<string> errors = new List<string>();
+                    try
+                    {
+                        DisplayChart(errors);
+                    }
+                    catch
+                    {
+                        System.Windows.Threading.Dispatcher.FromThread(viewerThread).InvokeShutdown();
+                        MessageBox.Show("Allowed API call frequency is 5 calls per minute and 500 calls per day", "Call limit exceeded", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
+
+                    DataContext = this;
+                    System.Windows.Threading.Dispatcher.FromThread(viewerThread).InvokeShutdown();
+                    if (errors.Count > 0)
+                    {
+                        string currencies = string.Join(", ", errors);
+                        MessageBox.Show($"API provided no data for currencies: {currencies}", "Unavailable data", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                }
             }
         }
 
@@ -268,8 +284,8 @@ namespace HCI_MiniProjekat
             PropertyChanged?.Invoke(this, e);
         }
 
-        private void DisplayChart()
-        {          
+        private void DisplayChart(List<string> errors)
+        {
             DateTime startDate = FromDate.SelectedDate.GetValueOrDefault();
             DateTime endDate = ToDate.SelectedDate.GetValueOrDefault();
 
@@ -288,11 +304,28 @@ namespace HCI_MiniProjekat
                     string data_key;
                     if (Intertval.Text != "Intraday") data_key = $"Time Series FX ({Intertval.Text})";
                     else data_key = $"Time Series FX ({minutes})";
+                    RouteValueDictionary jsonDataDict = new RouteValueDictionary(json_data);
+                    if (!jsonDataDict.ContainsKey(data_key))
+                    {
+                        foreach (string key in jsonDataDict.Keys)
+                        {
+                            if (key.StartsWith("Note"))
+                            {
+                                throw new Exception("Call limit exceeded");
+                            }
+                        }
+                        errors.Add(curr);
+                        continue;
+                    }
+
                     dynamic data = json_data[data_key];
                     RouteValueDictionary result = new RouteValueDictionary(data);
                     ChartValues<double> values = new ChartValues<double>();
 
-                    foreach (var key in result.Keys)
+                    XAxes.ElementAt(0).Labels.Clear();
+                    XAxesLine.ElementAt(0).Labels.Clear();
+
+                    foreach (string key in result.Keys)
                     {
                         DateTime oDate = Convert.ToDateTime(key);
                         if (DateTime.Compare(oDate, startDate) >= 0 && DateTime.Compare(oDate, endDate) <= 0)
@@ -331,7 +364,6 @@ namespace HCI_MiniProjekat
 
             Series = tempSeries;
             SeriesLine = tempSeriesLine;
-
         }
 
         private string FormURL(string from)
