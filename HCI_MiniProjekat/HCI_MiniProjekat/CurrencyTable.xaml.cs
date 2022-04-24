@@ -21,16 +21,23 @@ namespace HCI_MiniProjekat
     {
         public List<TableRow> Rows { get; set; }
         public string Currency { get; set; }
+        public List<string> FromCurrenciesSymbols { get; set; }
+        public string CurrencyTitle { get; set; }
 
-        public CurrencyTable(List<TableRow> rows)
+        public CurrencyTable(List<TableRow> rows, List<string> fromCurreciesSymbols, string title)
         {
-            //Rows = ((MainWindow)Application.Current.MainWindow).Rows;
             Rows = rows;
+            FromCurrenciesSymbols = fromCurreciesSymbols;
             InitializeComponent();
             DataContext = this;
-            Currency = "Konvertibilna marka";
-
+            CurrencyTitle = title;
             
         }
+
+        private void DisplayTableButton_Click(object sender, RoutedEventArgs e)
+        {
+        
+        }
+
     }
 }

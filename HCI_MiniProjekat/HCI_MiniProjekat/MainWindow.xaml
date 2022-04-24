@@ -170,15 +170,25 @@
                 <Button Grid.Column="5" HorizontalAlignment="Center" materialDesign:ShadowAssist.ShadowDepth="Depth2" Click="Fetch_Click">Fetch</Button>
             </Grid>
         </Grid>
-        <Grid Grid.Row="1" Grid.ColumnSpan="2">
+        <Grid Grid.Row="1" Grid.ColumnSpan="2" ClipToBounds="True">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition  Width="5"/>
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <lvc:CartesianChart Series="{Binding SeriesLine}" MouseDoubleClick="CartesianChartLine_MouseDoubleClick" ZoomMode="Both" LegendPosition="Bottom" XAxes="{Binding XAxesLine}"  YAxes="{Binding YAxesLine}" />
             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
             <lvc:CartesianChart Grid.Column="2" Series="{Binding Series}" ZoomMode="Both" LegendPosition="Bottom"  XAxes="{Binding XAxes}"  YAxes="{Binding YAxes}" />
+            <materialDesign:ColorZone x:Name="DisplayTable" Grid.Column="2" VerticalAlignment="Bottom" HorizontalAlignment="Right" Background="#51afe5" Padding="1" CornerRadius="4" Margin="0 0 5 5" materialDesign:ShadowAssist.ShadowDepth="Depth1" Width="80">
+                <Grid>
+                    <ComboBox Foreground="White" FontWeight="Bold" x:Name="DisplayTableCB" Grid.Column="2" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0 0 30 10" ItemsSource="{Binding FromCurreciesSymbols}"/>
+                    <Button Style="{StaticResource MaterialDesignToolButton}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0 0 3 2" Click="DisplayTableButton_Click">
+                        <materialDesign:PackIcon
+                    Kind="TableEye"
+                    ToolTip="Display table"/>
+                    </Button>
+                </Grid>
+            </materialDesign:ColorZone>
         </Grid>
     </Grid>
 

@@ -32,6 +32,7 @@ namespace HCI_MiniProjekat
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         public List<string> FromCurrecies { get; set; } = new List<string>();
+        public List<string> FromCurreciesSymbols { get; set; } = new List<string>();
         public string ToCurrency { get; set; } = "";
         public List<string> Currencies { get; set; }
         public string minutes;
@@ -66,7 +67,6 @@ namespace HCI_MiniProjekat
                 OnPropertyChanged(new PropertyChangedEventArgs("SeriesLine"));
             }
         }
-
         public List<TableRow> Rows = new List<TableRow>();
 
         public MainWindow()
@@ -78,6 +78,7 @@ namespace HCI_MiniProjekat
             tb.ItemsSource = Currencies;
             tb2.ItemsSource = Currencies;
             ToDate.IsEnabled = false;
+            DisplayTable.Visibility = Visibility.Collapsed;
         }
 
         public List<Axis> XAxes { get; set; }
@@ -147,18 +148,18 @@ namespace HCI_MiniProjekat
                     cur.Add(c);
                 }
             }
-           /** using (TextFieldParser parser = new TextFieldParser("..\\..\\digital_currency_list.csv"))
-            {
-                parser.TextFieldType = FieldType.Delimited;
-                parser.SetDelimiters(",");
-                parser.ReadLine();
-                while (!parser.EndOfData)
-                {
-                    string[] fields = parser.ReadFields();
-                    string c = $"{fields[0]} - {fields[1]}";
-                    cur.Add(c);
-                }
-            }**/
+            /** using (TextFieldParser parser = new TextFieldParser("..\\..\\digital_currency_list.csv"))
+             {
+                 parser.TextFieldType = FieldType.Delimited;
+                 parser.SetDelimiters(",");
+                 parser.ReadLine();
+                 while (!parser.EndOfData)
+                 {
+                     string[] fields = parser.ReadFields();
+                     string c = $"{fields[0]} - {fields[1]}";
+                     cur.Add(c);
+                 }
+             }**/
             Currencies = cur;
         }
 
@@ -177,6 +178,7 @@ namespace HCI_MiniProjekat
                     return;
                 }
                 FromCurrecies.Add(selected);
+                FromCurreciesSymbols.Add(selected.Split()[0]);
                 First_List.Items.Refresh();
                 tb.Text = "";
             }
@@ -278,6 +280,8 @@ namespace HCI_MiniProjekat
                         string currencies = string.Join(", ", errors);
                         MessageBox.Show($"API provided no data for currencies: {currencies}", "Unavailable data", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
+                    DisplayTable.Visibility = Visibility.Visible;
+                    DisplayTableCB.SelectedIndex = 0;
                 }
             }
         }
@@ -379,65 +383,6 @@ namespace HCI_MiniProjekat
 
             Series = tempSeries;
             SeriesLine = tempSeriesLine;
-
-            DisplayTable();
-        }
-
-        private void DisplayTable()
-        {
-            // najprije treba odrediti valutu koju prikazujemo 
-            string from = FromCurrecies[0].Substring(0, 3);
-            string QUERY_URL = FormURL(from);
-            
-            Uri queryUri = new Uri(QUERY_URL);
-            using (WebClient client = new WebClient())
-            {
-                JavaScriptSerializer js = new JavaScriptSerializer();
-                dynamic json_data = js.Deserialize(client.DownloadString(queryUri), typeof(object));
-
-                string data_key;
-                if (Intertval.Text != "Intraday") data_key = $"Time Series FX ({Intertval.Text})";
-                else data_key = $"Time Series FX ({minutes})";
-
-                dynamic data = json_data[data_key];
-                RouteValueDictionary result = new RouteValueDictionary(data);
-                List<string> attributes = new List<string> { "1. open", "2. high", "3. low", "4. close" };
-
-                foreach (string key in result.Keys)
-                {
-                    DateTime oDate = Convert.ToDateTime(key);
-                    if (IsInInterval(oDate))
-                    {
-                        object obj = new object();
-                        result.TryGetValue(key, out obj);
-                        RouteValueDictionary d = new RouteValueDictionary(obj);
-                        d.TryGetValue(attributes[0], out obj);
-                        double num = Convert.ToDouble(obj);
-                        // values.Add(num);
-                        TableRow tr = new TableRow();
-                        d.TryGetValue(attributes[1], out obj);
-                        tr.Open = num;
-                        tr.High = Convert.ToDouble(obj);
-                        d.TryGetValue(attributes[2], out obj);
-                        tr.Low = Convert.ToDouble(obj);
-                        d.TryGetValue(attributes[3], out obj);
-                        tr.Close = Convert.ToDouble(obj);
-                        tr.DateString = key.ToString();
-                        
-                        Rows.Add(tr);
-                    }
-                    else
-                        break;
-                    DataContext = this;
-
-                }
-
-            }
-            
-            CurrencyTable t = new CurrencyTable(Rows);
-            t.Show();
-
-
         }
 
         private string FormURL(string from)
@@ -490,6 +435,64 @@ namespace HCI_MiniProjekat
         private void FromDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             ToDate.IsEnabled = true;
+        }
+
+        private void DisplayTableButton_Click(object sender, RoutedEventArgs e)
+        {
+            ShowTable();
+
+        }
+
+        private void ShowTable()
+        {
+            Rows.Clear();
+            string from = FromCurrecies[DisplayTableCB.SelectedIndex].Substring(0, 3);
+            string QUERY_URL = FormURL(from);
+
+            Uri queryUri = new Uri(QUERY_URL);
+            using (WebClient client = new WebClient())
+            {
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                dynamic json_data = js.Deserialize(client.DownloadString(queryUri), typeof(object));
+
+                string data_key;
+                if (Intertval.Text != "Intraday") data_key = $"Time Series FX ({Intertval.Text})";
+                else data_key = $"Time Series FX ({minutes})";
+
+                dynamic data = json_data[data_key];
+                RouteValueDictionary result = new RouteValueDictionary(data);
+                List<string> attributes = new List<string> { "1. open", "2. high", "3. low", "4. close" };
+
+                foreach (string key in result.Keys)
+                {
+                    DateTime oDate = Convert.ToDateTime(key);
+                    if (IsInInterval(oDate))
+                    {
+                        object obj = new object();
+                        result.TryGetValue(key, out obj);
+                        RouteValueDictionary d = new RouteValueDictionary(obj);
+                        d.TryGetValue(attributes[0], out obj);
+                        double num = Convert.ToDouble(obj);
+                        TableRow tr = new TableRow();
+                        d.TryGetValue(attributes[1], out obj);
+                        tr.Open = num;
+                        tr.High = Convert.ToDouble(obj);
+                        d.TryGetValue(attributes[2], out obj);
+                        tr.Low = Convert.ToDouble(obj);
+                        d.TryGetValue(attributes[3], out obj);
+                        tr.Close = Convert.ToDouble(obj);
+                        tr.DateString = key.ToString();
+
+                        Rows.Add(tr);
+                    }
+                    else
+                        break;
+                    DataContext = this;
+                }
+            }
+            string Title = from + " - " + ToCurrency.Substring(0, 3);
+            CurrencyTable t = new CurrencyTable(Rows, FromCurreciesSymbols, Title);
+            t.Show();
         }
     }
 }

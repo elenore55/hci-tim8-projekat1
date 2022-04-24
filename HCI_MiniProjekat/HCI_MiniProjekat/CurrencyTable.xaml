@@ -3,9 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:HCI_MiniProjekat"
+        xmlns:local="clr-namespace:HCI_MiniProjekat" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="CurrencyTable" Height="450" Width="800">
+        Title="{Binding CurrencyTitle }" Height="450" Width="800">
     <Window.Resources>
         <ResourceDictionary>
 
@@ -34,6 +34,7 @@
                         <Setter Property="VerticalAlignment" Value="Stretch"></Setter>
                         <Setter Property="BorderThickness" Value="0"></Setter>
                         <Setter Property="FontSize" Value="20"></Setter>
+                        <Setter Property="MinWidth" Value="600"></Setter>
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -43,16 +44,21 @@
     </Window.Resources>
 
     <Grid>
+        <ComboBox Foreground="White" FontWeight="Bold" x:Name="DisplayTableCB" Grid.Column="2" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0 0 30 10" ItemsSource="{Binding FromCurrenciesSymbols}"/>
+        <Button Style="{StaticResource MaterialDesignToolButton}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0 0 3 2" Click="DisplayTableButton_Click">
+            <materialDesign:PackIcon
+                    Kind="TableEye"
+                    ToolTip="Display table"/>
+        </Button>
         <ListView ItemsSource="{Binding Rows}" ItemContainerStyle="{DynamicResource CustomListViewItemStyle}"
           AlternationCount="2" Margin="0,0,0,0">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn DisplayMemberBinding="{Binding DateString}" Header="DATE" Width="160"></GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding DateString}" Header="DATE/TIME" Width="204"></GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding Open}" Header="OPEN" Width="140" ></GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding High}" Header="HIGH" Width="140"></GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding Low}" Header="LOW" Width="140"></GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding Close}" Header="CLOSE" Width="140"></GridViewColumn>
-                    
                     
                 </GridView>
             </ListView.View>
