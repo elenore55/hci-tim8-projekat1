@@ -32,6 +32,7 @@ namespace HCI_MiniProjekat
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         public List<string> FromCurrecies { get; set; } = new List<string>();
+        public List<string> FromCurreciesSymbols { get; set; } = new List<string>();
         public string ToCurrency { get; set; } = "";
         public List<string> Currencies { get; set; }
         public string minutes;
@@ -75,7 +76,7 @@ namespace HCI_MiniProjekat
             TimeInterval.Visibility = Visibility.Collapsed;
             tb.ItemsSource = Currencies;
             tb2.ItemsSource = Currencies;
-            ToDate.IsEnabled = false;
+            DisplayTable.Visibility = Visibility.Collapsed;
         }
 
         public List<Axis> XAxes { get; set; }
@@ -175,6 +176,7 @@ namespace HCI_MiniProjekat
                     return;
                 }
                 FromCurrecies.Add(selected);
+                FromCurreciesSymbols.Add(selected.Split()[0]);
                 First_List.Items.Refresh();
                 tb.Text = "";
             }
@@ -276,6 +278,8 @@ namespace HCI_MiniProjekat
                         string currencies = string.Join(", ", errors);
                         MessageBox.Show($"API provided no data for currencies: {currencies}", "Unavailable data", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
+                    DisplayTable.Visibility = Visibility.Visible;
+                    DisplayTableCB.SelectedIndex = 0;
                 }
             }
         }
@@ -426,9 +430,9 @@ namespace HCI_MiniProjekat
             Application.Current.Shutdown();
         }
 
-        private void FromDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        private void DisplayTableButton_Click(object sender, RoutedEventArgs e)
         {
-            ToDate.IsEnabled = true;
+
         }
     }
 }
