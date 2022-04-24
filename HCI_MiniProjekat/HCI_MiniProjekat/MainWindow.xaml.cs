@@ -67,6 +67,8 @@ namespace HCI_MiniProjekat
             }
         }
 
+        public List<TableRow> Rows = new List<TableRow>();
+
         public MainWindow()
         {
             LoadCurrencies();
@@ -377,6 +379,65 @@ namespace HCI_MiniProjekat
 
             Series = tempSeries;
             SeriesLine = tempSeriesLine;
+
+            DisplayTable();
+        }
+
+        private void DisplayTable()
+        {
+            // najprije treba odrediti valutu koju prikazujemo 
+            string from = FromCurrecies[0].Substring(0, 3);
+            string QUERY_URL = FormURL(from);
+            
+            Uri queryUri = new Uri(QUERY_URL);
+            using (WebClient client = new WebClient())
+            {
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                dynamic json_data = js.Deserialize(client.DownloadString(queryUri), typeof(object));
+
+                string data_key;
+                if (Intertval.Text != "Intraday") data_key = $"Time Series FX ({Intertval.Text})";
+                else data_key = $"Time Series FX ({minutes})";
+
+                dynamic data = json_data[data_key];
+                RouteValueDictionary result = new RouteValueDictionary(data);
+                List<string> attributes = new List<string> { "1. open", "2. high", "3. low", "4. close" };
+
+                foreach (string key in result.Keys)
+                {
+                    DateTime oDate = Convert.ToDateTime(key);
+                    if (IsInInterval(oDate))
+                    {
+                        object obj = new object();
+                        result.TryGetValue(key, out obj);
+                        RouteValueDictionary d = new RouteValueDictionary(obj);
+                        d.TryGetValue(attributes[0], out obj);
+                        double num = Convert.ToDouble(obj);
+                        // values.Add(num);
+                        TableRow tr = new TableRow();
+                        d.TryGetValue(attributes[1], out obj);
+                        tr.Open = num;
+                        tr.High = Convert.ToDouble(obj);
+                        d.TryGetValue(attributes[2], out obj);
+                        tr.Low = Convert.ToDouble(obj);
+                        d.TryGetValue(attributes[3], out obj);
+                        tr.Close = Convert.ToDouble(obj);
+                        tr.DateString = key.ToString();
+                        
+                        Rows.Add(tr);
+                    }
+                    else
+                        break;
+                    DataContext = this;
+
+                }
+
+            }
+            
+            CurrencyTable t = new CurrencyTable(Rows);
+            t.Show();
+
+
         }
 
         private string FormURL(string from)
