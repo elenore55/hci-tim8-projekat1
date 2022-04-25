@@ -37,6 +37,7 @@ namespace HCI_MiniProjekat
         public List<string> Currencies { get; set; }
         public string minutes;
         public SplashScreenWindow viewer = new SplashScreenWindow();
+        public Dictionary<string, RouteValueDictionary> DataPerCurrency { get; set; } = new Dictionary<string, RouteValueDictionary>();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -299,88 +300,98 @@ namespace HCI_MiniProjekat
             XAxes.ElementAt(0).Name = $"DateTime - {Intertval.Text}";
             XAxesLine.ElementAt(0).Name = $"DateTime - {Intertval.Text}";
 
+            string to = ToCurrency.Substring(0, 3);
+
             foreach (string curr in FromCurrecies)
             {
-                string queryURL = FormURL(curr.Substring(0, 3));
-                Uri queryUri = new Uri(queryURL);
-
-                using (WebClient client = new WebClient())
+                if (!DataPerCurrency.ContainsKey(curr + to + Intertval.Text))
                 {
-                    JavaScriptSerializer js = new JavaScriptSerializer();
-                    dynamic json_data = js.Deserialize(client.DownloadString(queryUri), typeof(object));
-                    string data_key;
-                    if (Intertval.Text != "Intraday") data_key = $"Time Series FX ({Intertval.Text})";
-                    else data_key = $"Time Series FX ({minutes})";
-                    RouteValueDictionary jsonDataDict = new RouteValueDictionary(json_data);
-                    if (!jsonDataDict.ContainsKey(data_key))
+                    string queryURL = FormURL(curr.Substring(0, 3));
+                    Uri queryUri = new Uri(queryURL);
+
+                    using (WebClient client = new WebClient())
                     {
-                        foreach (string key in jsonDataDict.Keys)
-                        {
-                            if (key.StartsWith("Note"))
-                            {
-                                throw new Exception("Call limit exceeded");
-                            }
-                        }
-                        errors.Add(curr);
-                        continue;
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        dynamic json_data = js.Deserialize(client.DownloadString(queryUri), typeof(object));
+                        DataPerCurrency[curr + to + Intertval.Text] = new RouteValueDictionary(json_data); ;     
                     }
-
-                    dynamic data = json_data[data_key];
-                    RouteValueDictionary result = new RouteValueDictionary(data);
-                    ChartValues<double> values = new ChartValues<double>();
-
-                    XAxes.ElementAt(0).Labels.Clear();
-                    XAxesLine.ElementAt(0).Labels.Clear();
-
-                    if (Intertval.Text == "Intraday")
-                    {
-                        string k = result.Keys.ElementAt(0);
-                        XAxes.ElementAt(0).Name += $" ({k.Substring(0, 10)})";
-                        XAxesLine.ElementAt(0).Name += $" ({k.Substring(0, 10)})";
-                    }
-
-                    foreach (string key in result.Keys)
-                    {
-                        DateTime oDate = Convert.ToDateTime(key);
-                        if (IsInInterval(oDate))
-                        {
-                            string label = key;
-                            if (Intertval.Text == "Intraday")
-                                label = key.Substring(11, 5);
-                            XAxes.ElementAt(0).Labels.Add(label);
-                            XAxesLine.ElementAt(0).Labels.Add(label);
-                            object obj;
-                            result.TryGetValue(key, out obj);
-                            RouteValueDictionary d = new RouteValueDictionary(obj);
-                            d.TryGetValue(Type.Text.ToLower(), out obj);
-                            double num = Convert.ToDouble(obj);
-                            values.Add(num);
-                        }
-                    }
-
-                    tempSeries.Add(
-                        new ColumnSeries<double>
-                        {
-                            Values = values,
-                            Name = curr,
-                            GroupPadding = 10
-                        }
-                    );
-
-                    tempSeriesLine.Add(
-                        new LineSeries<double>
-                        {
-                            Values = values,
-                            Name = curr,
-                            GeometrySize = 10,
-                            Fill = null
-                        }
-                    );
                 }
+
+                string data_key;
+                if (Intertval.Text != "Intraday") data_key = $"Time Series FX ({Intertval.Text})";
+                else data_key = $"Time Series FX ({minutes})";
+
+                RouteValueDictionary jsonDataDict = DataPerCurrency[curr + to + Intertval.Text];
+
+                if (!jsonDataDict.ContainsKey(data_key))
+                {
+                    foreach (string key in jsonDataDict.Keys)
+                    {
+                        if (key.StartsWith("Note"))
+                        {
+                            throw new Exception("Call limit exceeded");
+                        }
+                    }
+                    errors.Add(curr);
+                    continue;
+                }
+
+                dynamic data = jsonDataDict[data_key];
+                RouteValueDictionary result = new RouteValueDictionary(data);
+                ChartValues<double> values = new ChartValues<double>();
+
+                XAxes.ElementAt(0).Labels.Clear();
+                XAxesLine.ElementAt(0).Labels.Clear();
+
+                if (Intertval.Text == "Intraday")
+                {
+                    string k = result.Keys.ElementAt(0);
+                    XAxes.ElementAt(0).Name += $" ({k.Substring(0, 10)})";
+                    XAxesLine.ElementAt(0).Name += $" ({k.Substring(0, 10)})";
+                }
+
+                foreach (string key in result.Keys)
+                {
+                    DateTime oDate = Convert.ToDateTime(key);
+                    if (IsInInterval(oDate))
+                    {
+                        string label = key;
+                        if (Intertval.Text == "Intraday")
+                            label = key.Substring(11, 5);
+                        XAxes.ElementAt(0).Labels.Add(label);
+                        XAxesLine.ElementAt(0).Labels.Add(label);
+                        object obj;
+                        result.TryGetValue(key, out obj);
+                        RouteValueDictionary d = new RouteValueDictionary(obj);
+                        d.TryGetValue(Type.Text.ToLower(), out obj);
+                        double num = Convert.ToDouble(obj);
+                        values.Add(num);
+                    }
+                }
+
+                tempSeries.Add(
+                    new ColumnSeries<double>
+                    {
+                        Values = values,
+                        Name = curr,
+                        GroupPadding = 10
+                    }
+                );
+
+                tempSeriesLine.Add(
+                    new LineSeries<double>
+                    {
+                        Values = values,
+                        Name = curr,
+                        GeometrySize = 10,
+                        Fill = null
+                    }
+                );
             }
 
             Series = tempSeries;
             SeriesLine = tempSeriesLine;
+            Thread.Sleep(500);
         }
 
         private string FormURL(string from)
