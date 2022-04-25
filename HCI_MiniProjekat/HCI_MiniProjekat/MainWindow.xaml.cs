@@ -227,10 +227,18 @@ namespace HCI_MiniProjekat
             if (Intertval.SelectedIndex == 0)
             {
                 TimeInterval.Visibility = Visibility.Visible;
+                FromDate.Visibility = Visibility.Hidden;
+                ToDate.Visibility = Visibility.Hidden;
+                FromTime.Visibility = Visibility.Visible;
+                ToTime.Visibility = Visibility.Visible;
             }
             else
             {
                 TimeInterval.Visibility = Visibility.Collapsed;
+                FromDate.Visibility = Visibility.Visible;
+                ToDate.Visibility = Visibility.Visible;
+                FromTime.Visibility = Visibility.Hidden;
+                ToTime.Visibility = Visibility.Hidden;
             }
         }
 
