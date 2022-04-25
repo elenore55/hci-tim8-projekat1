@@ -304,7 +304,8 @@ namespace HCI_MiniProjekat
 
             foreach (string curr in FromCurrecies)
             {
-                if (!DataPerCurrency.ContainsKey(curr + to + Intertval.Text))
+                string curr_key = $"{curr},{to},{Intertval.Text},{TimeInterval.Text}";
+                if (!DataPerCurrency.ContainsKey(curr_key))
                 {
                     string queryURL = FormURL(curr.Substring(0, 3));
                     Uri queryUri = new Uri(queryURL);
@@ -313,7 +314,7 @@ namespace HCI_MiniProjekat
                     {
                         JavaScriptSerializer js = new JavaScriptSerializer();
                         dynamic json_data = js.Deserialize(client.DownloadString(queryUri), typeof(object));
-                        DataPerCurrency[curr + to + Intertval.Text] = new RouteValueDictionary(json_data); ;     
+                        DataPerCurrency[curr_key] = new RouteValueDictionary(json_data); ;     
                     }
                 }
 
@@ -321,7 +322,7 @@ namespace HCI_MiniProjekat
                 if (Intertval.Text != "Intraday") data_key = $"Time Series FX ({Intertval.Text})";
                 else data_key = $"Time Series FX ({minutes})";
 
-                RouteValueDictionary jsonDataDict = DataPerCurrency[curr + to + Intertval.Text];
+                RouteValueDictionary jsonDataDict = DataPerCurrency[curr_key];
 
                 if (!jsonDataDict.ContainsKey(data_key))
                 {
@@ -485,8 +486,7 @@ namespace HCI_MiniProjekat
 
         private void Type_GotFocus(object sender, RoutedEventArgs e)
         {
-            Type.BorderThickness = new Thickness(0, 0, 0, 0);
-            Type.BorderBrush = Brushes.Gray;
+            Type.BorderBrush = Brushes.DarkSlateGray;
         }
 
         private void Intertval_LostFocus(object sender, RoutedEventArgs e)
@@ -500,7 +500,6 @@ namespace HCI_MiniProjekat
 
         private void Intertval_GotFocus(object sender, RoutedEventArgs e)
         {
-            Intertval.BorderThickness = new Thickness(0, 0, 0, 0);
             Intertval.BorderBrush = Brushes.DarkSlateGray;
         }
 
@@ -515,8 +514,7 @@ namespace HCI_MiniProjekat
 
         private void TimeInterval_GotFocus(object sender, RoutedEventArgs e)
         {
-            TimeInterval.BorderThickness = new Thickness(0, 0, 0, 0);
-            TimeInterval.BorderBrush = Brushes.SlateGray;
+            TimeInterval.BorderBrush = Brushes.DarkSlateGray;
         }
     }
 }
