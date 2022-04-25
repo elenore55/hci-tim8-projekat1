@@ -250,9 +250,13 @@ namespace HCI_MiniProjekat
             }
             else
             {
-                if (!AreDatesChronological())
+                if (Intertval.Text != "Intraday" && !AreDatesChronological())
                 {
                     MessageBox.Show("Dates must be chosen chronologically!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                else if (Intertval.Text == "Intraday" && !AreTimesChronological())
+                {
+                    MessageBox.Show("Times must be chosen chronologically!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 else
                 {
@@ -367,8 +371,8 @@ namespace HCI_MiniProjekat
                         string label = key;
                         if (Intertval.Text == "Intraday")
                             label = key.Substring(11, 5);
-                        XAxes.ElementAt(0).Labels.Add(label);
-                        XAxesLine.ElementAt(0).Labels.Add(label);
+                        XAxes.ElementAt(0).Labels.Insert(0, label);
+                        XAxesLine.ElementAt(0).Labels.Insert(0, label);
                         object obj;
                         result.TryGetValue(key, out obj);
                         RouteValueDictionary d = new RouteValueDictionary(obj);
@@ -414,16 +418,40 @@ namespace HCI_MiniProjekat
 
         private bool IsInInterval(DateTime date)
         {
-            if (FromDate.SelectedDate == null && ToDate.SelectedDate == null) return true;
-            if (FromDate.SelectedDate == null)
+            if (Intertval.Text != "Intraday")
             {
-                return DateTime.Compare(date, ToDate.SelectedDate.Value) <= 0;
+                if (FromDate.SelectedDate == null && ToDate.SelectedDate == null) return true;
+                if (FromDate.SelectedDate == null)
+                {
+                    return DateTime.Compare(date, ToDate.SelectedDate.Value) <= 0;
+                }
+                if (ToDate.SelectedDate == null)
+                {
+                    return DateTime.Compare(date, FromDate.SelectedDate.Value) >= 0;
+                }
+                return DateTime.Compare(date, ToDate.SelectedDate.Value) <= 0 && DateTime.Compare(date, FromDate.SelectedDate.Value) >= 0;
             }
-            if (ToDate.SelectedDate == null)
+            if (FromTime.SelectedTime == null && ToTime.SelectedTime == null) return true;
+            string timeStr = date.ToShortTimeString();
+            string timeStrFrom;
+            string timeStrTo;
+            if (FromTime.SelectedTime == null)
             {
-                return DateTime.Compare(date, FromDate.SelectedDate.Value) >= 0;
+                timeStrTo = ToTime.Text;
+                if (timeStrTo.Length == 4) timeStrTo = "0" + timeStrTo;
+                return timeStr.CompareTo(timeStrTo) <= 0;
             }
-            return DateTime.Compare(date, ToDate.SelectedDate.Value) <= 0 && DateTime.Compare(date, FromDate.SelectedDate.Value) >= 0;
+            if (ToTime.SelectedTime == null)
+            {
+                timeStrFrom = FromTime.Text;
+                if (timeStrFrom.Length == 4) timeStrFrom = "0" + timeStrFrom;
+                return timeStr.CompareTo(timeStrFrom) >= 0;
+            }
+            timeStrFrom = FromTime.Text;
+            if (timeStrFrom.Length == 4) timeStrFrom = "0" + timeStrFrom;
+            timeStrTo = ToTime.Text;
+            if (timeStrTo.Length == 4) timeStrTo = "0" + timeStrTo;
+            return timeStr.CompareTo(timeStrTo) <= 0 && timeStr.CompareTo(timeStrFrom) >= 0;
         }
 
         private bool AreDatesChronological()
@@ -431,6 +459,15 @@ namespace HCI_MiniProjekat
             if (FromDate.SelectedDate != null && ToDate.SelectedDate != null)
             {
                 return FromDate.SelectedDate.GetValueOrDefault().CompareTo(ToDate.SelectedDate.GetValueOrDefault()) <= 0;
+            }
+            return true;
+        }
+
+        private bool AreTimesChronological()
+        {
+            if (FromTime.SelectedTime != null && ToTime.SelectedTime != null)
+            {
+                return FromTime.SelectedTime.GetValueOrDefault().CompareTo(ToTime.SelectedTime.GetValueOrDefault()) <= 0;
             }
             return true;
         }
