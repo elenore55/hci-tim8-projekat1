@@ -26,10 +26,15 @@ namespace HCI_MiniProjekat
         public ObservableCollection<string> FromCurreciesSymbols { get; set; }
         public string CurrencyTitle { get; set; }
         public int selectedIndex { get; set; }
-        public CurrencyTable()
+        public Dictionary<string, List<TableRow>> TableData { get; set; } = new Dictionary<string, List<TableRow>>();
+        public CurrencyTable(Dictionary<string, List<TableRow>> data, List<string> symbols, int selected)
         {
+            TableData = data;
+            selectedIndex = selected;
             Rows = new ObservableCollection<TableRow>();
             FromCurreciesSymbols = new ObservableCollection<string>();
+            setSymbols(symbols);
+            setRows(TableData[FromCurreciesSymbols[selected]]);
             InitializeComponent();
         }
 
@@ -39,19 +44,16 @@ namespace HCI_MiniProjekat
             e.Cancel = true;
         }
 
-        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
-
         private void DisplayTableButton_Click(object sender, RoutedEventArgs e)
         {
-            
+            selectedIndex = DisplayTableCB.SelectedIndex;
+            setRows(TableData[FromCurreciesSymbols[selectedIndex]]);
 
         }
 
         internal void setRows(List<TableRow> rows)
         {
+            Rows.Clear();
             foreach (var r in rows)
             {
                 Rows.Add(r);
@@ -60,9 +62,10 @@ namespace HCI_MiniProjekat
 
         internal void setSymbols(List<string> fromCurreciesSymbols)
         {
-            foreach (var v in fromCurreciesSymbols)
+            FromCurreciesSymbols.Clear();
+            foreach (string v in fromCurreciesSymbols)
             {
-                fromCurreciesSymbols.Add(v);
+                FromCurreciesSymbols.Add(v);
             }
         }
     }

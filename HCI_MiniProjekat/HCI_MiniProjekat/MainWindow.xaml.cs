@@ -40,6 +40,7 @@ namespace HCI_MiniProjekat
         public Dictionary<string, RouteValueDictionary> DataPerCurrency { get; set; } = new Dictionary<string, RouteValueDictionary>();
 
         public event PropertyChangedEventHandler PropertyChanged;
+        public static Dictionary<string, List<TableRow>> TableData { get; set; } = new Dictionary<string, List<TableRow>>();
 
         private List<ISeries> _series = new List<ISeries>();
         public List<ISeries> Series
@@ -57,7 +58,6 @@ namespace HCI_MiniProjekat
 
         private List<ISeries> _seriesLine = new List<ISeries>();
 
-        public CurrencyTable ct = new CurrencyTable();
         public List<ISeries> SeriesLine
         {
             get
@@ -149,18 +149,18 @@ namespace HCI_MiniProjekat
                     cur.Add(c);
                 }
             }
-           /** using (TextFieldParser parser = new TextFieldParser("..\\..\\digital_currency_list.csv"))
-            {
-                parser.TextFieldType = FieldType.Delimited;
-                parser.SetDelimiters(",");
-                parser.ReadLine();
-                while (!parser.EndOfData)
-                {
-                    string[] fields = parser.ReadFields();
-                    string c = $"{fields[0]} - {fields[1]}";
-                    cur.Add(c);
-                }
-            }**/
+            /** using (TextFieldParser parser = new TextFieldParser("..\\..\\digital_currency_list.csv"))
+             {
+                 parser.TextFieldType = FieldType.Delimited;
+                 parser.SetDelimiters(",");
+                 parser.ReadLine();
+                 while (!parser.EndOfData)
+                 {
+                     string[] fields = parser.ReadFields();
+                     string c = $"{fields[0]} - {fields[1]}";
+                     cur.Add(c);
+                 }
+             }**/
             Currencies = cur;
         }
 
@@ -179,7 +179,6 @@ namespace HCI_MiniProjekat
                     return;
                 }
                 FromCurrecies.Add(selected);
-                FromCurreciesSymbols.Add(selected.Split()[0]);
                 First_List.Items.Refresh();
                 tb.Text = "";
             }
@@ -295,6 +294,7 @@ namespace HCI_MiniProjekat
                         MessageBox.Show($"API provided no data for currencies: {currencies}", "Unavailable data", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     DisplayTable.Visibility = Visibility.Visible;
+                    DisplayTableCB.Items.Refresh();
                     DisplayTableCB.SelectedIndex = 0;
                 }
             }
@@ -325,9 +325,10 @@ namespace HCI_MiniProjekat
             XAxesLine.ElementAt(0).Name = $"DateTime - {Intertval.Text}";
 
             string to = ToCurrency.Substring(0, 3);
-
+            List<string> simboli = new List<string>();
             foreach (string curr in FromCurrecies)
             {
+                simboli.Add(curr.Split()[0]);
                 string curr_key = $"{curr},{to},{Intertval.Text},{TimeInterval.Text}";
                 if (!DataPerCurrency.ContainsKey(curr_key))
                 {
@@ -338,7 +339,7 @@ namespace HCI_MiniProjekat
                     {
                         JavaScriptSerializer js = new JavaScriptSerializer();
                         dynamic json_data = js.Deserialize(client.DownloadString(queryUri), typeof(object));
-                        DataPerCurrency[curr_key] = new RouteValueDictionary(json_data); ;     
+                        DataPerCurrency[curr_key] = new RouteValueDictionary(json_data); ;
                     }
                 }
 
@@ -365,6 +366,7 @@ namespace HCI_MiniProjekat
                 RouteValueDictionary result = new RouteValueDictionary(data);
                 ChartValues<double> values = new ChartValues<double>();
 
+                List<TableRow> Rows = new List<TableRow>();
                 XAxes.ElementAt(0).Labels.Clear();
                 XAxesLine.ElementAt(0).Labels.Clear();
 
@@ -380,6 +382,9 @@ namespace HCI_MiniProjekat
                     DateTime oDate = Convert.ToDateTime(key);
                     if (IsInInterval(oDate))
                     {
+                        List<string> attributes = new List<string> { "1. open", "2. high", "3. low", "4. close" };
+
+                        TableRow tr = new TableRow();
                         string label = key;
                         if (Intertval.Text == "Intraday")
                             label = key.Substring(11, 5);
@@ -391,8 +396,20 @@ namespace HCI_MiniProjekat
                         d.TryGetValue(Type.Text.ToLower(), out obj);
                         double num = Convert.ToDouble(obj);
                         values.Add(num);
+
+                        d.TryGetValue(attributes[0], out obj);
+                        tr.Open = Convert.ToDouble(obj);
+                        d.TryGetValue(attributes[1], out obj);
+                        tr.High = Convert.ToDouble(obj);
+                        d.TryGetValue(attributes[2], out obj);
+                        tr.Low = Convert.ToDouble(obj);
+                        d.TryGetValue(attributes[3], out obj);
+                        tr.Close = Convert.ToDouble(obj);
+                        tr.DateString = key.ToString();
+                        Rows.Add(tr);
                     }
                 }
+                TableData[curr.Split()[0]] = Rows;
 
                 tempSeries.Add(
                     new ColumnSeries<double>
@@ -413,7 +430,8 @@ namespace HCI_MiniProjekat
                     }
                 );
             }
-
+            FromCurreciesSymbols = simboli;
+            DisplayTableCB.ItemsSource = FromCurreciesSymbols;
             Series = tempSeries;
             SeriesLine = tempSeriesLine;
             Thread.Sleep(500);
@@ -484,16 +502,6 @@ namespace HCI_MiniProjekat
             return true;
         }
 
-        private void CartesianChart_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            
-        }
-
-        private void CartesianChartLine_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            
-        }
-
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             Application.Current.Shutdown();
@@ -501,49 +509,10 @@ namespace HCI_MiniProjekat
 
         private void DisplayTableButton_Click(object sender, RoutedEventArgs e)
         {
-            List<TableRow> Rows = new List<TableRow>();
-            string curr = FromCurrecies[DisplayTableCB.SelectedIndex];
-            string to = ToCurrency.Substring(0, 3);
-            
-            string curr_key = $"{curr},{to},{Intertval.Text},{TimeInterval.Text}";
-            RouteValueDictionary result = DataPerCurrency[curr_key];
-
-            List<string> attributes = new List<string> { "1. open", "2. high", "3. low", "4. close" };
-
-            foreach (string key in result.Keys)
+            CurrencyTable ct = new CurrencyTable(TableData, FromCurreciesSymbols, DisplayTableCB.SelectedIndex)
             {
-                Console.WriteLine(key + " je kljuc");
-            }
-                foreach (string key in result.Keys)
-            {
-                DateTime oDate = Convert.ToDateTime(key);
-                
-                    object obj = new object();
-                    result.TryGetValue(key, out obj);
-                    RouteValueDictionary d = new RouteValueDictionary(obj);
-                    d.TryGetValue(attributes[0], out obj);
-                    double num = Convert.ToDouble(obj);
-                    TableRow tr = new TableRow();
-                    d.TryGetValue(attributes[1], out obj);
-                    tr.Open = num;
-                    tr.High = Convert.ToDouble(obj);
-                    d.TryGetValue(attributes[2], out obj);
-                    tr.Low = Convert.ToDouble(obj);
-                    d.TryGetValue(attributes[3], out obj);
-                    tr.Close = Convert.ToDouble(obj);
-                    tr.DateString = key.ToString();
-
-                Rows.Add(tr);
-                
-                DataContext = this;
-            }
-            string Title = curr + " - " + to;
-            ct.setRows(Rows);
-            //Console.WriteLine("Prije podesavanja indeks je bio " + ct.selectedIndex);
-            //ct.selectedIndex = ind;
-            //Console.WriteLine("Nakon podesavanja indeks je " + ct.selectedIndex);
-            ct.setSymbols(FromCurreciesSymbols);
-            ct.Title = Title;
+                Title = Title
+            };
             ct.Show();
         }
 
