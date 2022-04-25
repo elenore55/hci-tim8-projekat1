@@ -41,12 +41,10 @@
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
-        <materialDesign:ColorZone x:Name="DisplayTable" VerticalAlignment="Top" HorizontalAlignment="Left" Background="#51afe5" Padding="1" CornerRadius="4" Margin="15 5 5 5" materialDesign:ShadowAssist.ShadowDepth="Depth1" Width="90">
+        <materialDesign:ColorZone x:Name="DisplayTable" Foreground="White" VerticalAlignment="Top" HorizontalAlignment="Left" Background="#673AB7" Padding="1" CornerRadius="4" Margin="15 5 5 5" materialDesign:ShadowAssist.ShadowDepth="Depth1" Width="80">
             <Grid>
-                <ComboBox Foreground="Black" FontWeight="Bold" x:Name="DisplayTableCB" Grid.Column="2" 
-                          VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10 0 30 5" 
-                          ItemsSource="{Binding FromCurrenciesSymbols}" SelectedIndex="{Binding selectedIndex}" />
-                <Button Style="{StaticResource MaterialDesignToolButton}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0 0 3 2" Click="DisplayTableButton_Click">
+                <ComboBox FontWeight="Bold" x:Name="DisplayTableCB" Grid.Column="2" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="10 0 30 5" ItemsSource="{Binding FromCurreciesSymbols}" SelectedIndex="{Binding selectedIndex}"/>
+                <Button Style="{StaticResource MaterialDesignToolButton}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0 0 3 2" Click="DisplayTableButton_Click" Foreground="White">
                     <materialDesign:PackIcon
                     Kind="TableEye"
                     ToolTip="Display table"/>

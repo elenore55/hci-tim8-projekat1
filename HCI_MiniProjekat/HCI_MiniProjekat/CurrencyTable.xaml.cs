@@ -23,13 +23,13 @@ namespace HCI_MiniProjekat
     {
         public ObservableCollection<TableRow> Rows { get; set; }
         public string Currency { get; set; }
-        public ObservableCollection<string> FromCurrenciesSymbols { get; set; }
+        public ObservableCollection<string> FromCurreciesSymbols { get; set; }
         public string CurrencyTitle { get; set; }
         public int selectedIndex { get; set; }
         public CurrencyTable()
         {
             Rows = new ObservableCollection<TableRow>();
-            FromCurrenciesSymbols = new ObservableCollection<string>();
+            FromCurreciesSymbols = new ObservableCollection<string>();
             InitializeComponent();
         }
 
@@ -50,5 +50,20 @@ namespace HCI_MiniProjekat
 
         }
 
+        internal void setRows(List<TableRow> rows)
+        {
+            foreach (var r in rows)
+            {
+                Rows.Add(r);
+            }
+        }
+
+        internal void setSymbols(List<string> fromCurreciesSymbols)
+        {
+            foreach (var v in fromCurreciesSymbols)
+            {
+                fromCurreciesSymbols.Add(v);
+            }
+        }
     }
 }

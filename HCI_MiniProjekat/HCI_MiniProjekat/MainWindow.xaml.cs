@@ -56,6 +56,8 @@ namespace HCI_MiniProjekat
         }
 
         private List<ISeries> _seriesLine = new List<ISeries>();
+
+        public CurrencyTable ct = new CurrencyTable();
         public List<ISeries> SeriesLine
         {
             get
@@ -499,7 +501,50 @@ namespace HCI_MiniProjekat
 
         private void DisplayTableButton_Click(object sender, RoutedEventArgs e)
         {
+            List<TableRow> Rows = new List<TableRow>();
+            string curr = FromCurrecies[DisplayTableCB.SelectedIndex];
+            string to = ToCurrency.Substring(0, 3);
+            
+            string curr_key = $"{curr},{to},{Intertval.Text},{TimeInterval.Text}";
+            RouteValueDictionary result = DataPerCurrency[curr_key];
 
+            List<string> attributes = new List<string> { "1. open", "2. high", "3. low", "4. close" };
+
+            foreach (string key in result.Keys)
+            {
+                Console.WriteLine(key + " je kljuc");
+            }
+                foreach (string key in result.Keys)
+            {
+                DateTime oDate = Convert.ToDateTime(key);
+                
+                    object obj = new object();
+                    result.TryGetValue(key, out obj);
+                    RouteValueDictionary d = new RouteValueDictionary(obj);
+                    d.TryGetValue(attributes[0], out obj);
+                    double num = Convert.ToDouble(obj);
+                    TableRow tr = new TableRow();
+                    d.TryGetValue(attributes[1], out obj);
+                    tr.Open = num;
+                    tr.High = Convert.ToDouble(obj);
+                    d.TryGetValue(attributes[2], out obj);
+                    tr.Low = Convert.ToDouble(obj);
+                    d.TryGetValue(attributes[3], out obj);
+                    tr.Close = Convert.ToDouble(obj);
+                    tr.DateString = key.ToString();
+
+                Rows.Add(tr);
+                
+                DataContext = this;
+            }
+            string Title = curr + " - " + to;
+            ct.setRows(Rows);
+            //Console.WriteLine("Prije podesavanja indeks je bio " + ct.selectedIndex);
+            //ct.selectedIndex = ind;
+            //Console.WriteLine("Nakon podesavanja indeks je " + ct.selectedIndex);
+            ct.setSymbols(FromCurreciesSymbols);
+            ct.Title = Title;
+            ct.Show();
         }
 
         private void tb2_LostFocus(object sender, RoutedEventArgs e)
