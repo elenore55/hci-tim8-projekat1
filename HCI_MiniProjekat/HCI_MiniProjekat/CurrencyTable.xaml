@@ -38,20 +38,24 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
-
-
         </ResourceDictionary>
     </Window.Resources>
-
     <Grid>
-        <ComboBox Foreground="White" FontWeight="Bold" x:Name="DisplayTableCB" Grid.Column="2" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0 0 30 10" ItemsSource="{Binding FromCurrenciesSymbols}"/>
-        <Button Style="{StaticResource MaterialDesignToolButton}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0 0 3 2" Click="DisplayTableButton_Click">
-            <materialDesign:PackIcon
+        <materialDesign:ColorZone x:Name="DisplayTable" VerticalAlignment="Top" HorizontalAlignment="Left" Background="#51afe5" Padding="1" CornerRadius="4" Margin="15 5 5 5" materialDesign:ShadowAssist.ShadowDepth="Depth1" Width="90">
+            <Grid>
+                <ComboBox Foreground="Black" FontWeight="Bold" x:Name="DisplayTableCB" Grid.Column="2" 
+                          VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10 0 30 5" 
+                          ItemsSource="{Binding FromCurrenciesSymbols}" SelectedIndex="{Binding selectedIndex}" />
+                <Button Style="{StaticResource MaterialDesignToolButton}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0 0 3 2" Click="DisplayTableButton_Click">
+                    <materialDesign:PackIcon
                     Kind="TableEye"
                     ToolTip="Display table"/>
-        </Button>
+                </Button>
+            </Grid>
+        </materialDesign:ColorZone>
+
         <ListView ItemsSource="{Binding Rows}" ItemContainerStyle="{DynamicResource CustomListViewItemStyle}"
-          AlternationCount="2" Margin="0,0,0,0">
+          AlternationCount="2" Margin="0,30,0,0">
             <ListView.View>
                 <GridView>
                     <GridViewColumn DisplayMemberBinding="{Binding DateString}" Header="DATE/TIME" Width="204"></GridViewColumn>
@@ -59,7 +63,7 @@
                     <GridViewColumn DisplayMemberBinding="{Binding High}" Header="HIGH" Width="140"></GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding Low}" Header="LOW" Width="140"></GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding Close}" Header="CLOSE" Width="140"></GridViewColumn>
-                    
+
                 </GridView>
             </ListView.View>
         </ListView>

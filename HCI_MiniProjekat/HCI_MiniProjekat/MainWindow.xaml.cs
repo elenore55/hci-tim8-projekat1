@@ -69,6 +69,17 @@ namespace HCI_MiniProjekat
         }
         public List<TableRow> Rows = new List<TableRow>();
 
+        public CurrencyTable ct;
+
+        private CurrencyTable createInitialTable()
+        {
+            List<TableRow> r = new List<TableRow>();
+            CurrencyTable localTable = new CurrencyTable(r, new List<string>(), " ");
+            localTable.selectedIndex = 0;
+            return localTable; 
+
+        }
+
         public MainWindow()
         {
             LoadCurrencies();
@@ -79,6 +90,7 @@ namespace HCI_MiniProjekat
             tb2.ItemsSource = Currencies;
             ToDate.IsEnabled = false;
             DisplayTable.Visibility = Visibility.Collapsed;
+            ct = createInitialTable();
         }
 
         public List<Axis> XAxes { get; set; }
@@ -439,14 +451,31 @@ namespace HCI_MiniProjekat
 
         private void DisplayTableButton_Click(object sender, RoutedEventArgs e)
         {
-            ShowTable();
+            try
+            {
+                int n = DisplayTableCB.SelectedIndex;
+                ct.selectedIndex = n;
+                ShowTable(n);
+            }
+            catch
+            {
+                Thread viewerThread = new Thread(delegate ()
+                {
+                    viewer = new SplashScreenWindow();
+                    viewer.Show();
+                    System.Windows.Threading.Dispatcher.Run();
+                });
+                //System.Windows.Threading.Dispatcher.FromThread(viewerThread).InvokeShutdown();
+                MessageBox.Show("Allowed API call frequency is 5 calls per minute and 500 calls per day", "Call limit exceeded", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            
 
         }
 
-        private void ShowTable()
+        public void ShowTable(int ind)
         {
             Rows.Clear();
-            string from = FromCurrecies[DisplayTableCB.SelectedIndex].Substring(0, 3);
+            string from = FromCurrecies[ind].Substring(0, 3);
             string QUERY_URL = FormURL(from);
 
             Uri queryUri = new Uri(QUERY_URL);
@@ -490,9 +519,24 @@ namespace HCI_MiniProjekat
                     DataContext = this;
                 }
             }
+            
             string Title = from + " - " + ToCurrency.Substring(0, 3);
-            CurrencyTable t = new CurrencyTable(Rows, FromCurreciesSymbols, Title);
-            t.Show();
+            ct.Rows.Clear();
+            ct.Owner = this;
+            Console.WriteLine("Prije podesavanja indeks je bio " + ct.selectedIndex);
+            ct.selectedIndex = ind;
+            Console.WriteLine("Nakon podesavanja indeks je " + ct.selectedIndex);
+            ct.FromCurrenciesSymbols.Clear();
+            foreach (var v in Rows)
+            {
+                ct.Rows.Add(v);
+            }
+            foreach (var v in FromCurreciesSymbols)
+            {
+                ct.FromCurrenciesSymbols.Add(v);
+            }
+            ct.Title = Title;
+            ct.Show();
         }
     }
 }
