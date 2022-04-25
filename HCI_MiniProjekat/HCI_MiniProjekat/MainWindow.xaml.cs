@@ -247,6 +247,7 @@ namespace HCI_MiniProjekat
             if (FromCurrecies.Count == 0 || ToCurrency == "" || Type.SelectedItem == null || Intertval.SelectedItem == null)
             {
                 MessageBox.Show("You did not fill in the required information!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MarkRed();
             }
             else
             {
@@ -295,6 +296,15 @@ namespace HCI_MiniProjekat
                     DisplayTableCB.SelectedIndex = 0;
                 }
             }
+        }
+
+        private void MarkRed()
+        {
+            MarkFromCurrencyRed();
+            MarkToCurrencyRed();
+            MarkTypeRed();
+            MarkIntervalRed();
+            MarkTimeIntervalRed();
         }
 
         public void OnPropertyChanged(PropertyChangedEventArgs e)
@@ -474,12 +484,12 @@ namespace HCI_MiniProjekat
 
         private void CartesianChart_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            MessageBox.Show("Double clicked!");
+            
         }
 
         private void CartesianChartLine_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            MessageBox.Show("Double clicked line");
+            
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)
@@ -494,11 +504,7 @@ namespace HCI_MiniProjekat
 
         private void tb2_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (ToCurrency == "")
-            {
-                tb2_border.BorderThickness = new Thickness(0, 0, 0, 2);
-                tb2_border.BorderBrush = Brushes.Red;
-            }
+            MarkToCurrencyRed();
         }
 
         private void tb2_GotFocus(object sender, RoutedEventArgs e)
@@ -508,11 +514,7 @@ namespace HCI_MiniProjekat
 
         private void tb_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (FromCurrecies.Count == 0)
-            {
-                tb_border.BorderThickness = new Thickness(0, 0, 0, 2);
-                tb_border.BorderBrush = Brushes.Red;
-            }
+            MarkFromCurrencyRed();
         }
 
         private void tb_GotFocus(object sender, RoutedEventArgs e)
@@ -522,11 +524,7 @@ namespace HCI_MiniProjekat
 
         private void Type_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (Type.SelectedItem == null)
-            {
-                Type.BorderThickness = new Thickness(0, 0, 0, 1);
-                Type.BorderBrush = Brushes.Red;
-            }
+            MarkTypeRed();
         }
 
         private void Type_GotFocus(object sender, RoutedEventArgs e)
@@ -536,11 +534,7 @@ namespace HCI_MiniProjekat
 
         private void Intertval_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (Intertval.SelectedItem == null)
-            {
-                Intertval.BorderThickness = new Thickness(0, 0, 0, 1);
-                Intertval.BorderBrush = Brushes.Red;
-            }
+            MarkIntervalRed();
         }
 
         private void Intertval_GotFocus(object sender, RoutedEventArgs e)
@@ -550,16 +544,57 @@ namespace HCI_MiniProjekat
 
         private void TimeInterval_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (TimeInterval.SelectedItem == null)
-            {
-                TimeInterval.BorderThickness = new Thickness(0, 0, 0, 1);
-                TimeInterval.BorderBrush = Brushes.Red;
-            }
+            MarkTimeIntervalRed();
         }
 
         private void TimeInterval_GotFocus(object sender, RoutedEventArgs e)
         {
             TimeInterval.BorderBrush = Brushes.DarkSlateGray;
+        }
+
+        private void MarkFromCurrencyRed()
+        {
+            if (FromCurrecies.Count == 0)
+            {
+                tb_border.BorderThickness = new Thickness(0, 0, 0, 2);
+                tb_border.BorderBrush = Brushes.Red;
+            }
+        }
+
+        private void MarkToCurrencyRed()
+        {
+            if (ToCurrency == "")
+            {
+                tb2_border.BorderThickness = new Thickness(0, 0, 0, 2);
+                tb2_border.BorderBrush = Brushes.Red;
+            }
+        }
+
+        private void MarkTypeRed()
+        {
+            if (Type.SelectedItem == null)
+            {
+                Type.BorderThickness = new Thickness(0, 0, 0, 1);
+                Type.BorderBrush = Brushes.Red;
+            }
+        }
+
+        private void MarkIntervalRed()
+        {
+            if (Intertval.SelectedItem == null)
+            {
+                Intertval.BorderThickness = new Thickness(0, 0, 0, 1);
+                Intertval.BorderBrush = Brushes.Red;
+            }
+        }
+
+        private void MarkTimeIntervalRed()
+        {
+            if (TimeInterval.SelectedItem == null)
+            {
+                TimeInterval.BorderThickness = new Thickness(0, 0, 0, 1);
+                TimeInterval.BorderBrush = Brushes.Red;
+            }
         }
     }
 }
