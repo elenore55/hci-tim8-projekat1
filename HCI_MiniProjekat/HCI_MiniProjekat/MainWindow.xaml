@@ -52,7 +52,7 @@
             </Grid.RowDefinitions>
             <materialDesign:ColorZone Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4" Grid.RowSpan="3" Background="#61bdf2" Padding="2" VerticalAlignment="Stretch"></materialDesign:ColorZone>
             <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold">Select 'From' currencies</Label>
-            <materialDesign:ColorZone Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" Mode="Standard" Padding="8 4 8 4" CornerRadius="8" Margin="30 14 30 14" materialDesign:ShadowAssist.ShadowDepth="Depth2">
+            <materialDesign:ColorZone x:Name="tb_border" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" Mode="Standard" Padding="8 4 8 4" CornerRadius="8" Margin="30 14 30 14" materialDesign:ShadowAssist.ShadowDepth="Depth2">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -64,11 +64,11 @@
                         Kind="Search"
                         Opacity=".56" />
                     </Button>
-                    <content:AutoCompleteBox Grid.Column="1" VerticalAlignment="Center" x:Name="tb" FilterMode="Contains" Background="{Binding Path=Background, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" Style="{StaticResource AutoCompleteBoxStyle}" KeyDown="tb_KeyDown" BorderThickness="0" Placeholder="Search currency.."/>
+                    <content:AutoCompleteBox Grid.Column="1" VerticalAlignment="Center" x:Name="tb" FilterMode="Contains" Background="{Binding Path=Background, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" Style="{StaticResource AutoCompleteBoxStyle}" KeyDown="tb_KeyDown" BorderThickness="0" Placeholder="Search currency.." LostFocus="tb_LostFocus" GotFocus="tb_GotFocus"/>
                 </Grid>
             </materialDesign:ColorZone>
             <Label Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold">Select 'To' currency</Label>
-            <materialDesign:ColorZone Grid.Column="3" Grid.Row="0" VerticalAlignment="Center" Mode="Standard" Padding="8 4 8 4" CornerRadius="8" Margin="30 14 30 14" materialDesign:ShadowAssist.ShadowDepth="Depth2">
+            <materialDesign:ColorZone x:Name="tb2_border" Grid.Column="3" Grid.Row="0" VerticalAlignment="Center" Mode="Standard" Padding="8 4 8 4" CornerRadius="8" Margin="30 14 30 14" materialDesign:ShadowAssist.ShadowDepth="Depth2">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -80,7 +80,7 @@
                         Kind="Search"
                         Opacity=".56"/>
                     </Button>
-                    <content:AutoCompleteBox Grid.Column="1" VerticalAlignment="Center" x:Name="tb2" FilterMode="Contains" Background="{Binding Path=Background, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" Style="{StaticResource AutoCompleteBoxStyle}" KeyDown="tb2_KeyDown" BorderThickness="0" Placeholder="Search currency.."/>
+                    <content:AutoCompleteBox Grid.Column="1" VerticalAlignment="Center" x:Name="tb2" FilterMode="Contains" Background="{Binding Path=Background, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" Style="{StaticResource AutoCompleteBoxStyle}" KeyDown="tb2_KeyDown" BorderThickness="0" Placeholder="Search currency.." LostFocus="tb2_LostFocus" GotFocus="tb2_GotFocus" />
                 </Grid>
             </materialDesign:ColorZone>
             <ListView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="First_List" ItemsSource="{Binding FromCurrecies}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
@@ -131,7 +131,7 @@
                     Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
                 <ComboBox Margin="0 7 0 0" x:Name="Type" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Top"
                     materialDesign:HintAssist.Hint="Data Type"
-                    materialDesign:TextFieldAssist.HasClearButton="True">
+                    materialDesign:TextFieldAssist.HasClearButton="True" LostFocus="Type_LostFocus" GotFocus="Type_GotFocus">
                     <ComboBoxItem
                     Content="1. Open" />
                     <ComboBoxItem
@@ -143,7 +143,8 @@
                 </ComboBox>
                 <ComboBox Margin="0 7 0 0" x:Name="Intertval" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Top"
                     materialDesign:HintAssist.Hint="Interval Type"
-                    materialDesign:TextFieldAssist.HasClearButton="True" SelectionChanged="Intertval_SelectionChanged">
+                    materialDesign:TextFieldAssist.HasClearButton="True" SelectionChanged="Intertval_SelectionChanged"
+                    LostFocus="Intertval_LostFocus" GotFocus="Intertval_GotFocus">
                     <ComboBoxItem
                     Content="Intraday" />
                     <ComboBoxItem
@@ -155,7 +156,7 @@
                 </ComboBox>
                 <ComboBox Margin="0 7 0 0" x:Name="TimeInterval" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Top"
                     materialDesign:HintAssist.Hint="Minutes"
-                    materialDesign:TextFieldAssist.HasClearButton="True">
+                    materialDesign:TextFieldAssist.HasClearButton="True" LostFocus="TimeInterval_LostFocus" GotFocus="TimeInterval_GotFocus">
                     <ComboBoxItem
                     Content="1min" />
                     <ComboBoxItem

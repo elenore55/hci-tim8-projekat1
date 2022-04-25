@@ -445,5 +445,78 @@ namespace HCI_MiniProjekat
         {
 
         }
+
+        private void tb2_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (ToCurrency == "")
+            {
+                tb2_border.BorderThickness = new Thickness(0, 0, 0, 2);
+                tb2_border.BorderBrush = Brushes.Red;
+            }
+        }
+
+        private void tb2_GotFocus(object sender, RoutedEventArgs e)
+        {
+            tb2_border.BorderThickness = new Thickness(0, 0, 0, 0);
+        }
+
+        private void tb_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (FromCurrecies.Count == 0)
+            {
+                tb_border.BorderThickness = new Thickness(0, 0, 0, 2);
+                tb_border.BorderBrush = Brushes.Red;
+            }
+        }
+
+        private void tb_GotFocus(object sender, RoutedEventArgs e)
+        {
+            tb_border.BorderThickness = new Thickness(0, 0, 0, 0);
+        }
+
+        private void Type_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (Type.SelectedItem == null)
+            {
+                Type.BorderThickness = new Thickness(0, 0, 0, 1);
+                Type.BorderBrush = Brushes.Red;
+            }
+        }
+
+        private void Type_GotFocus(object sender, RoutedEventArgs e)
+        {
+            Type.BorderThickness = new Thickness(0, 0, 0, 0);
+            Type.BorderBrush = Brushes.Gray;
+        }
+
+        private void Intertval_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (Intertval.SelectedItem == null)
+            {
+                Intertval.BorderThickness = new Thickness(0, 0, 0, 1);
+                Intertval.BorderBrush = Brushes.Red;
+            }
+        }
+
+        private void Intertval_GotFocus(object sender, RoutedEventArgs e)
+        {
+            Intertval.BorderThickness = new Thickness(0, 0, 0, 0);
+            Intertval.BorderBrush = Brushes.DarkSlateGray;
+        }
+
+        private void TimeInterval_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (TimeInterval.SelectedItem == null)
+            {
+                TimeInterval.BorderThickness = new Thickness(0, 0, 0, 1);
+                TimeInterval.BorderBrush = Brushes.Red;
+            }
+        }
+
+        private void TimeInterval_GotFocus(object sender, RoutedEventArgs e)
+        {
+            TimeInterval.BorderThickness = new Thickness(0, 0, 0, 0);
+            TimeInterval.BorderBrush = Brushes.SlateGray;
+        }
     }
 }
